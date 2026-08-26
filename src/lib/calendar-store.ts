@@ -161,6 +161,7 @@ function isDemoAppointmentId(id: string) {
 /** Seed a multi-stylist floor when the book is empty (first visit only). */
 function seedDemoFloorIfEmpty() {
   if (!canUseStorage()) return
+  if (typeof window !== 'undefined' && window.location?.pathname === '/') return
   if (window.localStorage.getItem(DEMO_FLOOR_KEY) === '1') return
   // Real / signed-in salons start from their own book — never seed Maya/Jordan.
   if (isLiveSalonBook()) return

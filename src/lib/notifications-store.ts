@@ -237,6 +237,7 @@ export async function dispatchMessage(
           subject: msg.subject,
           body: msg.body,
           kind: msg.kind,
+          salonKey: (await import('./ops-settings')).loadOpsSettings().salonSyncKey,
         }),
         cache: 'no-store',
       })

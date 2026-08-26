@@ -81,6 +81,20 @@ async function saveSnap(key, snap) {
   memory.set(key, snap)
 }
 
+async function resolveAdminSnap(publicOrAdminKey) {
+  const key = String(publicOrAdminKey || '').trim()
+  if (!key) return null
+  if (key.startsWith('gd_')) {
+    const idx = await loadSnap(`idx-desk:${key}`)
+    const admin = idx && typeof idx === 'object' ? String(idx.salonSyncKey || '').trim() : ''
+    if (!admin) return null
+    const snap = await loadSnap(admin)
+    return snap ? { snap, adminKey: admin, deskKey: key } : null
+  }
+  const snap = await loadSnap(key)
+  return snap ? { snap, adminKey: String(snap.salonSyncKey || key), deskKey: snap.deskKey || '' } : null
+}
+
 function toISODate(d) {
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -416,6 +430,7 @@ function upsertClient(clients, input) {
       ...existing,
       name: name || existing.name,
       phone: phone || existing.phone,
+      email: String(input.email || existing.email || '').trim() || existing.email,
       updatedAt: now,
       source: input.source || existing.source,
     }
@@ -430,7 +445,7 @@ function upsertClient(clients, input) {
     updatedAt: now,
     name,
     phone,
-    email: '',
+    email: String(input.email || '').trim(),
     notes: '',
     formulas: '',
     preferences: '',
@@ -462,9 +477,13 @@ export async function handler(event) {
     if (!key || key.length < 8) {
       return json(400, { error: 'Missing salon key' })
     }
-    const snap = await loadSnap(key)
-    if (!snap) return json(404, { error: NOT_FOUND, salonKey: key })
-    return json(200, { ok: true, salonKey: key, ...publicDeskView(snap) })
+    const resolved = await resolveAdminSnap(key)
+    if (!resolved) return json(404, { error: NOT_FOUND, salonKey: key })
+    return json(200, {
+      ok: true,
+      salonKey: resolved.deskKey || key,
+      ...publicDeskView(resolved.snap),
+    })
   }
 
   if (event.httpMethod !== 'POST') {
@@ -483,8 +502,10 @@ export async function handler(event) {
     return json(400, { error: 'salonKey required' })
   }
 
-  const snap = await loadSnap(salonKey)
-  if (!snap) return json(404, { error: NOT_FOUND })
+  const resolved = await resolveAdminSnap(salonKey)
+  if (!resolved) return json(404, { error: NOT_FOUND })
+  const snap = resolved.snap
+  const adminKey = resolved.adminKey
 
   const appointments = asAppointments(snap.appointments)
   const clients = asClients(snap.clients)
@@ -511,24 +532,65 @@ export async function handler(event) {
       time: body.time || '',
       clientName: body.clientName || '',
       clientPhone: body.clientPhone || '',
+      clientEmail: body.clientEmail || '',
       stylist: 'Studio',
       source: 'ai_receptionist',
     })
     if (!result.ok || !result.appointment) {
       return json(409, { ok: false, error: result.error || 'Could not book' })
     }
+    if (body.clientEmail) result.appointment.clientEmail = String(body.clientEmail).trim()
     const nextAppts = [...appointments, result.appointment]
     const nextClients = upsertClient(clients, {
       name: result.appointment.clientName,
       phone: result.appointment.clientPhone,
+      email: result.appointment.clientEmail || body.clientEmail || '',
       source: 'ai_receptionist',
     })
-    await saveSnap(salonKey, persist(snap, nextAppts, nextClients.clients))
+    const nextSnap = persist(snap, nextAppts, nextClients.clients)
+    await saveSnap(adminKey, nextSnap)
+    const code = shortHoldCode(result.appointment.id)
+    try {
+      const { sendResendEmail } = await import('./_lib/send-resend.mjs')
+      const settings = nextSnap.settings && typeof nextSnap.settings === 'object' ? nextSnap.settings : {}
+      const studio = String(settings.studioName || 'Studio')
+      const guestEmail = String(result.appointment.clientEmail || body.clientEmail || '').trim()
+      const ownerEmail = String(settings.ownerNotifyEmail || nextSnap.ownerEmail || '').trim()
+      const bodyText = [
+        `Hi ${result.appointment.clientName},`,
+        ``,
+        `You're confirmed at ${studio}:`,
+        `${result.appointment.service}`,
+        `${result.appointment.dateLabel} at ${result.appointment.time}`,
+        ``,
+        `Confirmation: ${code}`,
+        ``,
+        `— ${studio} (via GlowUP.)`,
+      ].join('\n')
+      if (guestEmail.includes('@') && settings.messagingEnabled !== false) {
+        await sendResendEmail({
+          to: guestEmail,
+          subject: `Confirmed: ${result.appointment.service} · ${result.appointment.dateLabel}`,
+          text: bodyText,
+          replyTo: ownerEmail,
+        })
+      }
+      if (ownerEmail.includes('@') && settings.autoOwnerAlert !== false && settings.messagingEnabled !== false) {
+        await sendResendEmail({
+          to: ownerEmail,
+          subject: `New booking · ${result.appointment.clientName}`,
+          text: `New booking: ${result.appointment.clientName} · ${result.appointment.service} · ${result.appointment.dateLabel} ${result.appointment.time}`,
+          replyTo: ownerEmail,
+        })
+      }
+    } catch {
+      /* booking still saved if mail fails */
+    }
     return json(200, {
       ok: true,
-      salonKey,
-      confirmation_code: shortHoldCode(result.appointment.id),
-      confirmation: shortHoldCode(result.appointment.id),
+      salonKey: resolved.deskKey || salonKey,
+      confirmation_code: code,
+      confirmation: code,
       appointment: result.appointment,
     })
   }
@@ -543,8 +605,8 @@ export async function handler(event) {
       return json(409, { ok: false, error: result.error || 'Could not reschedule' })
     }
     const nextAppts = appointments.map((a) => (a.id === result.appointment.id ? result.appointment : a))
-    await saveSnap(salonKey, persist(snap, nextAppts))
-    return json(200, { ok: true, salonKey, appointment: result.appointment })
+    await saveSnap(adminKey, persist(snap, nextAppts))
+    return json(200, { ok: true, salonKey: resolved.deskKey || salonKey, appointment: result.appointment })
   }
 
   if (action === 'cancel') {
@@ -552,9 +614,14 @@ export async function handler(event) {
     if (!result.ok || !result.appointment) {
       return json(409, { ok: false, error: result.error || 'Could not cancel' })
     }
+    const code = shortHoldCode(result.appointment.id)
+    const given = String(body.confirmation || body.confirmation_code || '').trim().toUpperCase()
+    if (!given || given !== code) {
+      return json(403, { ok: false, error: 'Confirmation code required to cancel.' })
+    }
     const nextAppts = appointments.map((a) => (a.id === result.appointment.id ? result.appointment : a))
-    await saveSnap(salonKey, persist(snap, nextAppts))
-    return json(200, { ok: true, salonKey, appointment: result.appointment })
+    await saveSnap(adminKey, persist(snap, nextAppts))
+    return json(200, { ok: true, salonKey: resolved.deskKey || salonKey, appointment: result.appointment })
   }
 
   return json(400, { error: 'Unknown action. Use slots, book, reschedule, or cancel.' })

@@ -16,7 +16,10 @@ export async function findSalonProspects(city: string): Promise<ProspectSearchRe
       const res = await fetch(path, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ city }),
+        body: JSON.stringify({
+          city,
+          salonKey: (await import('./ops-settings')).loadOpsSettings().salonSyncKey,
+        }),
         signal: controller.signal,
       })
       text = await res.text()

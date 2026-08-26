@@ -188,12 +188,11 @@ function LoginPage() {
           <div className="auth-leaf leaf-c" />
         </div>
         <div className="auth-quote">
-          <div className="stars">★★★★★</div>
           <blockquote>
-            “My studio finally feels as polished behind the scenes as it does in the chair.”
+            One book for every chair. Glo holds after hours onto the live calendar — not a voicemail graveyard.
           </blockquote>
           <p>
-            Amelia Hart <span>Founder, Sunday Studio</span>
+            GlowUP. <span>Open beta · Beauty Business, Beautifully Done.</span>
           </p>
         </div>
       </section>

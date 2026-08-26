@@ -8,11 +8,12 @@ import { listAppointments, purgeDemoAppointmentsIfOnboarded } from './calendar-s
 import { listClients } from './clients-store'
 import { loadSalonContext, saveSalonContext } from './demo-salon'
 import { listMessages, replaceAllMessages, type OutboundMessage } from './notifications-store'
-import { ensureSalonSyncKey, loadOpsSettings, saveOpsSettings, type OpsSettings } from './ops-settings'
+import { ensureDeskKey, ensureSalonSyncKey, loadOpsSettings, saveOpsSettings, type OpsSettings } from './ops-settings'
 
 export type OpsSnapshot = {
   version: 1
   salonSyncKey: string
+  deskKey?: string
   updatedAt: string
   ownerIdentityId?: string
   ownerEmail?: string
@@ -81,7 +82,8 @@ export function salonDeskUrl(key: string): string {
 
 /** Point Brand booking URL at this salon’s Glo desk unless the owner already set a real URL. */
 export function ensureSalonDeskBookingUrl(): string {
-  const key = ensureSalonSyncKey()
+  ensureSalonSyncKey()
+  const key = ensureDeskKey()
   const url = salonDeskUrl(key)
   if (typeof window === 'undefined') return url
   const salon = loadSalonContext()
@@ -127,10 +129,12 @@ function mergeById(local: unknown, remote: unknown): unknown[] {
 export function buildSnapshot(): OpsSnapshot {
   const settings = loadOpsSettings()
   const key = ensureSalonSyncKey()
+  const deskKey = ensureDeskKey()
   const idMeta = getCloudIdentityMeta()
   return {
     version: 1,
     salonSyncKey: key,
+    deskKey,
     updatedAt: new Date().toISOString(),
     ownerIdentityId: idMeta.identityUserId,
     ownerEmail: idMeta.email,
@@ -149,6 +153,7 @@ export function buildSnapshot(): OpsSnapshot {
       city: settings.city,
       messagingEnabled: settings.messagingEnabled,
       salonSyncKey: key,
+      deskKey,
       syncEnabled: settings.syncEnabled,
       ownerIdentityId: idMeta.identityUserId,
       ownerEmail: idMeta.email,
@@ -173,6 +178,7 @@ export function applySnapshot(snap: OpsSnapshot, mode: 'merge' | 'replace' = 're
     saveOpsSettings({
       ...snap.settings,
       salonSyncKey: snap.salonSyncKey || snap.settings.salonSyncKey,
+      deskKey: snap.deskKey || snap.settings.deskKey || loadOpsSettings().deskKey,
       lastSyncedAt: snap.updatedAt || new Date().toISOString(),
       syncEnabled: true,
     })
@@ -228,7 +234,10 @@ async function opsGet(query: Record<string, string>): Promise<OpsHttp> {
   const qs = new URLSearchParams(query).toString()
   for (const endpoint of OPS_ENDPOINTS) {
     try {
-      const res = await fetch(`${endpoint}?${qs}`, { method: 'GET', cache: 'no-store' })
+      const headers: Record<string, string> = {}
+      const admin = loadOpsSettings().salonSyncKey
+      if (admin && query.key === admin) headers.Authorization = `Bearer ${admin}`
+      const res = await fetch(`${endpoint}?${qs}`, { method: 'GET', cache: 'no-store', headers })
       const text = await res.text()
       last = { status: res.status, text, endpoint }
       if (isSpaOrMissingFunction(res.status, text) && endpoint === OPS_ENDPOINTS[0]) {
@@ -253,9 +262,12 @@ async function opsRequest(method: 'GET' | 'PUT', keyOrBody: string | object): Pr
   let last: OpsHttp = { status: 0, text: 'No endpoint reached', endpoint: '' }
   for (const endpoint of OPS_ENDPOINTS) {
     try {
+      const admin = loadOpsSettings().salonSyncKey
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (admin) headers.Authorization = `Bearer ${admin}`
       const res = await fetch(endpoint, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(keyOrBody),
         cache: 'no-store',
       })
@@ -281,26 +293,11 @@ async function opsRequest(method: 'GET' | 'PUT', keyOrBody: string | object): Pr
 export async function probeOpsApi(): Promise<{ ok: boolean; detail: string }> {
   try {
     const health = await fetch('/api/health', { cache: 'no-store' })
-    const hj = health.ok ? ((await health.json()) as { ops?: string }) : null
-    const key = `gu_probe_${Date.now().toString(36)}`
-    const put = await opsRequest('PUT', {
-      version: 1,
-      salonSyncKey: key,
-      appointments: [],
-      clients: [],
-      notifications: [],
-      settings: {},
-    })
-    if (put.status >= 200 && put.status < 300 && !looksLikeHtml(put.text)) {
-      return {
-        ok: true,
-        detail: `Cloud book online (${put.endpoint})${hj?.ops ? ` · health.ops=${hj.ops}` : ''}`,
-      }
+    const hj = health.ok ? ((await health.json()) as { ops?: string; ok?: boolean }) : null
+    if (health.ok && hj) {
+      return { ok: true, detail: `Cloud book online${hj.ops ? ` · health.ops=${hj.ops}` : ''}` }
     }
-    return {
-      ok: false,
-      detail: `Probe failed HTTP ${put.status} via ${put.endpoint}: ${put.text.slice(0, 120)}`,
-    }
+    return { ok: false, detail: `Health HTTP ${health.status}` }
   } catch (e) {
     return { ok: false, detail: e instanceof Error ? e.message : 'Probe failed' }
   }
@@ -377,14 +374,18 @@ export async function pushToCloud(): Promise<SyncResult> {
     const { status, text, endpoint } = await opsRequest('PUT', snap)
 
     if (status >= 200 && status < 300 && !looksLikeHtml(text)) {
-      let data: { updatedAt?: string } = {}
+      let data: { updatedAt?: string; deskKey?: string } = {}
       try {
-        data = JSON.parse(text) as { updatedAt?: string }
+        data = JSON.parse(text) as { updatedAt?: string; deskKey?: string }
       } catch {
         /* still ok if empty body */
       }
       const updatedAt = data.updatedAt || snap.updatedAt
-      saveOpsSettings({ lastSyncedAt: updatedAt, syncEnabled: true })
+      saveOpsSettings({
+        lastSyncedAt: updatedAt,
+        syncEnabled: true,
+        ...(data.deskKey ? { deskKey: data.deskKey } : {}),
+      })
       return { ok: true, mode: 'push', updatedAt, source: 'api' }
     }
 

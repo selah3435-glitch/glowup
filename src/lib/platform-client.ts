@@ -48,8 +48,7 @@ export async function listPlatformSignups(adminToken?: string): Promise<{
   try {
     const headers: Record<string, string> = {}
     if (adminToken) headers.Authorization = `Bearer ${adminToken}`
-    const q = adminToken ? `?key=${encodeURIComponent(adminToken)}` : ''
-    const res = await fetch(`/api/platform${q}`, { headers })
+    const res = await fetch('/api/platform', { headers })
     const data = await res.json()
     if (!res.ok) return { ok: false, error: data.error || `HTTP ${res.status}` }
     return { ok: true, ...data }

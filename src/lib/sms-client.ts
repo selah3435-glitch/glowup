@@ -9,7 +9,10 @@ export async function sendSms(input: {
     const res = await fetch('/api/sms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
+      body: JSON.stringify({
+        ...input,
+        salonKey: (await import('./ops-settings')).loadOpsSettings().salonSyncKey,
+      }),
     })
     const data = (await res.json()) as {
       ok?: boolean

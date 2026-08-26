@@ -64,15 +64,14 @@ export async function handler(event) {
   }
 
   const catalog = PLANS[plan]
-  const origin =
-    body.origin ||
-    event.headers.origin ||
-    event.headers.Origin ||
-    'https://glowupbeautysolutions.com'
-  const successUrl =
-    body.successUrl ||
-    `${origin}/dashboard?checkout=success&plan=${plan}&session_id={CHECKOUT_SESSION_ID}`
-  const cancelUrl = body.cancelUrl || `${origin}/#pricing`
+  const rawOrigin = String(body.origin || event.headers.origin || event.headers.Origin || '')
+  const origin = /^(https:\/\/(www\.)?glowupbeautysolutions\.com|https:\/\/[a-z0-9-]+--glowupbeautysolutions-260\.netlify\.app|http:\/\/localhost(:\d+)?)$/i.test(
+    rawOrigin,
+  )
+    ? rawOrigin.replace(/\/$/, '')
+    : 'https://glowupbeautysolutions.com'
+  const successUrl = `${origin}/dashboard?checkout=success&plan=${plan}&session_id={CHECKOUT_SESSION_ID}`
+  const cancelUrl = `${origin}/#pricing`
 
   const params = new URLSearchParams()
   params.set('mode', 'subscription')

@@ -80,12 +80,45 @@ function identityIndexKey(id) {
   return `idx-id:${String(id || '').trim()}`
 }
 
+function deskIndexKey(deskKey) {
+  return `idx-desk:${String(deskKey || '').trim()}`
+}
+
+function newDeskKey() {
+  const id =
+    typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)
+      : `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`
+  return `gd_${id}`
+}
+
+function publicDeskView(snap) {
+  const settings = snap?.settings && typeof snap.settings === 'object' ? snap.settings : {}
+  const appts = Array.isArray(snap?.appointments) ? snap.appointments : []
+  const busy = appts
+    .filter((a) => a && a.status !== 'cancelled')
+    .map((a) => ({ dateISO: a.dateISO, time: a.time, status: a.status }))
+  return {
+    ok: true,
+    view: 'desk',
+    deskKey: snap.deskKey || '',
+    studioName: String(settings.studioName || 'Studio'),
+    city: String(settings.city || ''),
+    hours: String(settings.hours || ''),
+    services: Array.isArray(settings.services) ? settings.services : [],
+    busy,
+  }
+}
+
 function normalizeSnapshot(body) {
   const key = String(body.salonSyncKey || '').trim()
   if (!key || key.length < 8) return null
+  if (key.startsWith('gd_')) return null
+  const deskKey = String(body.deskKey || body.settings?.deskKey || '').trim()
   return {
     version: 1,
     salonSyncKey: key,
+    deskKey: deskKey.startsWith('gd_') ? deskKey : '',
     updatedAt: new Date().toISOString(),
     ownerIdentityId: String(body.ownerIdentityId || body.settings?.ownerIdentityId || '').trim(),
     ownerEmail: String(body.ownerEmail || body.settings?.ownerEmail || '')
@@ -108,6 +141,14 @@ export async function handler(event) {
     const email = (event.queryStringParameters?.email || '').trim().toLowerCase()
     const identity = (event.queryStringParameters?.identity || '').trim()
 
+    if (!key && (email || identity)) {
+      const admin = process.env.PLATFORM_ADMIN_TOKEN || ''
+      const auth = event.headers.authorization || event.headers.Authorization || ''
+      const bearer = String(auth).replace(/^Bearer\s+/i, '').trim()
+      if (!admin || bearer !== admin) {
+        return json(401, { error: 'Lookup by email or identity requires admin auth' })
+      }
+    }
     if (!key && email) {
       const idx = await loadSnap(emailIndexKey(email))
       const found = idx && typeof idx === 'object' ? String(idx.salonSyncKey || '').trim() : ''
@@ -123,9 +164,21 @@ export async function handler(event) {
     if (!key || key.length < 8) {
       return json(400, { error: 'Missing salon key (?key=gu_…)' })
     }
+    if (key.startsWith('gd_')) {
+      const idx = await loadSnap(deskIndexKey(key))
+      const admin = idx && typeof idx === 'object' ? String(idx.salonSyncKey || '').trim() : ''
+      const snap = admin ? await loadSnap(admin) : null
+      if (!snap) return json(404, { error: 'Salon not found', deskKey: key })
+      return json(200, publicDeskView(snap))
+    }
     const snap = await loadSnap(key)
     if (!snap) {
       return json(404, { error: 'Salon not found', salonSyncKey: key })
+    }
+    const auth = event.headers.authorization || event.headers.Authorization || ''
+    const bearer = String(auth).replace(/^Bearer\s+/i, '').trim()
+    if (bearer !== key) {
+      return json(200, publicDeskView(snap))
     }
     return json(200, snap)
   }
@@ -139,18 +192,31 @@ export async function handler(event) {
     }
     const incoming = normalizeSnapshot(body)
     if (!incoming) {
-      return json(400, { error: 'salonSyncKey required (min 8 chars)' })
+      return json(400, { error: 'salonSyncKey required (min 8 chars, owner key not desk key)' })
+    }
+    const auth = event.headers.authorization || event.headers.Authorization || ''
+    const bearer = String(auth).replace(/^Bearer\s+/i, '').trim()
+    if (bearer && bearer !== incoming.salonSyncKey) {
+      return json(403, { error: 'Authorization does not match salonSyncKey' })
     }
     const existing = await loadSnap(incoming.salonSyncKey)
+    let deskKey = incoming.deskKey || existing?.deskKey || ''
+    if (!deskKey || !String(deskKey).startsWith('gd_')) deskKey = newDeskKey()
     const snap = existing
       ? {
           ...incoming,
+          deskKey,
           appointments: mergeById(existing.appointments, incoming.appointments),
           clients: mergeById(existing.clients, incoming.clients),
           notifications: mergeById(existing.notifications, incoming.notifications),
         }
-      : incoming
+      : { ...incoming, deskKey }
     await saveSnap(snap.salonSyncKey, snap)
+    await saveSnap(deskIndexKey(deskKey), {
+      salonSyncKey: snap.salonSyncKey,
+      deskKey,
+      updatedAt: snap.updatedAt,
+    })
     if (snap.ownerEmail) {
       await saveSnap(emailIndexKey(snap.ownerEmail), {
         salonSyncKey: snap.salonSyncKey,
@@ -169,6 +235,7 @@ export async function handler(event) {
       ok: true,
       updatedAt: snap.updatedAt,
       salonSyncKey: snap.salonSyncKey,
+      deskKey: snap.deskKey,
       counts: {
         appointments: snap.appointments.length,
         clients: snap.clients.length,

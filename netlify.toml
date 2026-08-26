@@ -3,7 +3,7 @@
   publish = "dist/client"
 
 [functions]
-  directory = "netlify/functions"
+  directory = "netlify/functions-clean"
   node_bundler = "esbuild"
 
 [dev]
@@ -70,6 +70,12 @@
 [[redirects]]
   from = "/api/ops"
   to = "/.netlify/functions/ops"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/onboarding"
+  to = "/.netlify/functions/onboarding"
   status = 200
   force = true
 

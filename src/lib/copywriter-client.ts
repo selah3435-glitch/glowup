@@ -31,7 +31,10 @@ export async function generateCopyPack(req: CopywriterRequest): Promise<Copywrit
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req),
+        body: JSON.stringify({
+          ...req,
+          salonKey: (await import('./ops-settings')).loadOpsSettings().salonSyncKey,
+        }),
         signal: controller.signal,
       })
       window.clearTimeout(timer)

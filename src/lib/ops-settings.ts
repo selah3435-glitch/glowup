@@ -2,6 +2,8 @@
 
 export type OpsSettings = {
   salonSyncKey: string
+  /** Public Glo /book/ link — never the ops dump key */
+  deskKey: string
   syncEnabled: boolean
   lastSyncedAt: string
   stripePaymentLink: string
@@ -27,6 +29,7 @@ const KEY = 'glowup_ops_settings_v1'
 
 const DEFAULTS: OpsSettings = {
   salonSyncKey: '',
+  deskKey: '',
   /** Phase A: multi-device on by default once a key exists */
   syncEnabled: true,
   lastSyncedAt: '',
@@ -77,8 +80,17 @@ export function ensureSalonSyncKey(): string {
   return key
 }
 
+export function ensureDeskKey(): string {
+  const s = loadOpsSettings()
+  if (s.deskKey && s.deskKey.startsWith('gd_')) return s.deskKey
+  const key = `gd_${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`
+  saveOpsSettings({ deskKey: key })
+  return key
+}
+
 export function regenerateSalonSyncKey(): string {
   const key = `gu_${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`
-  saveOpsSettings({ salonSyncKey: key, lastSyncedAt: '' })
+  const deskKey = `gd_${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`
+  saveOpsSettings({ salonSyncKey: key, deskKey, lastSyncedAt: '' })
   return key
 }

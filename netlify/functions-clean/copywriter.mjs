@@ -152,6 +152,16 @@ export async function handler(event) {
     return { statusCode: 400, headers: corsHeaders(), body: JSON.stringify({ error: 'Invalid JSON' }) }
   }
 
+  const salonKey = String(body.salonKey || '').trim()
+  if (!salonKey || salonKey.startsWith('gd_') || salonKey.length < 8) {
+    return { statusCode: 401, headers: corsHeaders(), body: JSON.stringify({ error: 'salonKey required' }) }
+  }
+  const { loadOpsSnap } = await import('./_lib/send-resend.mjs')
+  const snap = await loadOpsSnap(salonKey)
+  if (!snap) {
+    return { statusCode: 401, headers: corsHeaders(), body: JSON.stringify({ error: 'Unknown salon' }) }
+  }
+
   const req = {
     salonName: String(body.salonName || 'the salon').trim(),
     city: body.city ? String(body.city).trim() : '',

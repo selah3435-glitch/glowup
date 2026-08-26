@@ -29,7 +29,7 @@ import {
 import { PRICING_PLANS, type PlanId } from '../lib/pricing'
 import { loadPilotSession } from '../lib/pilot-session'
 import { loadSalonContext } from '../lib/demo-salon'
-import { ensureSalonSyncKey } from '../lib/ops-settings'
+import { ensureDeskKey, ensureSalonSyncKey } from '../lib/ops-settings'
 import { computeProofMetrics } from '../lib/proof-metrics'
 import { listPendingDrafts } from '../lib/draft-store'
 
@@ -111,7 +111,7 @@ function DashboardOverview() {
   const pilot = typeof window !== 'undefined' ? loadPilotSession() : null
   const salon = typeof window !== 'undefined' ? loadSalonContext() : null
   const firstName = (pilot?.name || salon?.name || 'Owner').split(' ')[0]
-  const deskUrl = typeof window !== 'undefined' ? salonDeskUrl(ensureSalonSyncKey()) : ''
+  const deskUrl = typeof window !== 'undefined' ? salonDeskUrl(ensureDeskKey()) : ''
 
   return (
     <>

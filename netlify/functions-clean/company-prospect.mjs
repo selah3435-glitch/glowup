@@ -20,10 +20,24 @@ export async function handler(event) {
     return { statusCode: 405, headers: cors(), body: JSON.stringify({ error: 'POST only' }) }
   }
   let city = ''
+  let salonKey = ''
   try {
-    city = String(JSON.parse(event.body || '{}').city || '')
+    const parsed = JSON.parse(event.body || '{}')
+    city = String(parsed.city || '')
+    salonKey = String(parsed.salonKey || '').trim()
   } catch {
     return { statusCode: 400, headers: cors(), body: JSON.stringify({ error: 'Invalid JSON' }) }
+  }
+  const admin = process.env.PLATFORM_ADMIN_TOKEN || ''
+  const auth = event.headers.authorization || event.headers.Authorization || ''
+  const bearer = String(auth).replace(/^Bearer\s+/i, '').trim()
+  let allowed = Boolean(admin && bearer === admin)
+  if (!allowed && salonKey && !salonKey.startsWith('gd_')) {
+    const { loadOpsSnap } = await import('./_lib/send-resend.mjs')
+    allowed = Boolean(await loadOpsSnap(salonKey))
+  }
+  if (!allowed) {
+    return { statusCode: 401, headers: cors(), body: JSON.stringify({ error: 'salonKey or admin token required' }) }
   }
   const result = await runCompanyProspectSearch(city)
   return { statusCode: 200, headers: cors(), body: JSON.stringify(result) }

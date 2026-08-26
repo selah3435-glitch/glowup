@@ -81,6 +81,23 @@ export async function handler(event) {
     }
   }
 
+  const ip = String(event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'anon')
+    .split(',')[0]
+    .trim()
+  const bucket = globalThis.__gloChatHits || (globalThis.__gloChatHits = new Map())
+  const now = Date.now()
+  const windowMs = 60 * 60 * 1000
+  const prev = bucket.get(ip) || { n: 0, t: now }
+  const n = prev.t + windowMs < now ? 1 : prev.n + 1
+  bucket.set(ip, { n, t: prev.t + windowMs < now ? now : prev.t })
+  if (n > 40) {
+    return {
+      statusCode: 429,
+      headers: corsHeaders(),
+      body: JSON.stringify({ error: 'Too many Glo chats from this network. Try again later.' }),
+    }
+  }
+
   const apiKey = process.env.XAI_API_KEY
   if (!apiKey) {
     return {

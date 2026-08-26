@@ -60,11 +60,10 @@ async function saveAll(items) {
 
 function isAdmin(event) {
   const token = process.env.PLATFORM_ADMIN_TOKEN || ''
-  if (!token) return true // open list when not configured (still need deploy; lock in prod)
+  if (!token) return false
   const auth = event.headers.authorization || event.headers.Authorization || ''
   const bearer = auth.replace(/^Bearer\s+/i, '').trim()
-  const q = event.queryStringParameters?.key || ''
-  return bearer === token || q === token
+  return Boolean(bearer && bearer === token)
 }
 
 async function notify(payload) {
