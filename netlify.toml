@@ -1,6 +1,9 @@
 [build]
-  command = "vite build"
+  command = "vite build && node scripts/generate-html.mjs"
   publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "22"
 
 [functions]
   directory = "netlify/functions-clean"

@@ -7,9 +7,11 @@
 
 1. Netlify → Site `glowupbeautysolutions-260` → **Project configuration → Build & deploy → Import from Git** (or **Link repository**).
 2. Choose GitHub → `selah3435-glitch/glowup` → branch `main`.
-3. Build command: `vite build` (from `netlify.toml`).
+3. Build command: `vite build && node scripts/generate-html.mjs` (from `netlify.toml`).
 4. Publish directory: `dist/client`.
 5. Confirm functions dir is `netlify/functions-clean`.
+
+`vite build` alone ships assets without a prerendered `index.html`, so Netlify serves its generic 404. The generate-html step writes the homepage into `dist/client` before publish.
 
 After that, every push to `main` deploys production.
 
