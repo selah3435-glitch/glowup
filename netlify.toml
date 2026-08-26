@@ -1,0 +1,79 @@
+[build]
+  command = "vite build"
+  publish = "dist/client"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[dev]
+  command = "npm run dev"
+  targetPort = 3000
+  port = 8888
+
+# Campaigns and Glo call these public paths. Rewrite to functions
+# before the SPA fallback. force=true so HTML does not win.
+[[redirects]]
+  from = "/api/agents/copywriter"
+  to = "/.netlify/functions/copywriter"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/agents/company-prospect"
+  to = "/.netlify/functions/company-prospect"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/glo/chat"
+  to = "/.netlify/functions/glo-chat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/glo/desk"
+  to = "/.netlify/functions/glo-desk"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/platform"
+  to = "/.netlify/functions/platform"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/billing/checkout"
+  to = "/.netlify/functions/create-checkout"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/sms"
+  to = "/.netlify/functions/send-sms"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/email"
+  to = "/.netlify/functions/send-email"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ops"
+  to = "/.netlify/functions/ops"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

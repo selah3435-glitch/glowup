@@ -1,0 +1,25 @@
+# Dependencies and build
+node_modules/
+dist/
+.tanstack/
+*.log
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+.netlify
+.netlify.bak-*
+
+# Company lead exports (PII) — keep README only
+leads/*.json
+leads/*.csv
+leads/*.xlsx
+leads/*.pyc
+leads/__pycache__/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
