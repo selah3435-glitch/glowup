@@ -11,12 +11,26 @@ function cors() {
   }
 }
 
+function payload(city, extra = {}) {
+  return {
+    city: city || '',
+    competitors: [],
+    note: '',
+    ...extra,
+  }
+}
+
 export async function handler(event) {
-  if (event.httpMethod === 'OPTIONS') {
+  const method = event.httpMethod || event.method || ''
+  if (method === 'OPTIONS') {
     return { statusCode: 204, headers: cors(), body: '' }
   }
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: cors(), body: JSON.stringify({ error: 'POST only' }) }
+  if (method !== 'POST') {
+    return {
+      statusCode: 405,
+      headers: cors(),
+      body: JSON.stringify(payload('', { error: 'POST only' })),
+    }
   }
   let city = ''
   let ownName = ''
@@ -27,7 +41,11 @@ export async function handler(event) {
     ownName = String(parsed.ownName || '')
     salonKey = String(parsed.salonKey || '').trim()
   } catch {
-    return { statusCode: 400, headers: cors(), body: JSON.stringify({ error: 'Invalid JSON' }) }
+    return {
+      statusCode: 400,
+      headers: cors(),
+      body: JSON.stringify(payload('', { error: 'Invalid JSON' })),
+    }
   }
   const admin = process.env.PLATFORM_ADMIN_TOKEN || ''
   const auth = event.headers.authorization || event.headers.Authorization || ''
@@ -41,23 +59,30 @@ export async function handler(event) {
     return {
       statusCode: 401,
       headers: cors(),
-      body: JSON.stringify({
-        city,
-        competitors: [],
-        note: '',
-        error: 'salonKey or admin token required',
-      }),
+      body: JSON.stringify(payload(city, { error: 'salonKey or admin token required' })),
     }
   }
-  const result = await runCompetitorHunt({ city, ownName })
-  return {
-    statusCode: 200,
-    headers: cors(),
-    body: JSON.stringify({
-      city: result.city || city,
-      competitors: result.competitors || [],
-      note: result.note || '',
-      error: result.error,
-    }),
+  try {
+    const result = await runCompetitorHunt({ city, ownName })
+    return {
+      statusCode: 200,
+      headers: cors(),
+      body: JSON.stringify({
+        city: result.city || city,
+        competitors: result.competitors || [],
+        note: result.note || '',
+        error: result.error,
+      }),
+    }
+  } catch (e) {
+    return {
+      statusCode: 200,
+      headers: cors(),
+      body: JSON.stringify(
+        payload(city, {
+          error: e instanceof Error ? e.message : 'Competitor hunt failed',
+        }),
+      ),
+    }
   }
 }

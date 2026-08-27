@@ -11,8 +11,6 @@ import {
 } from './competitor-scout'
 import { fetchPublicHtml, hasScrapingBee } from './scrapingbee-leads'
 
-const PRICE_PATHS = ['/', '/services', '/pricing', '/menu', '/book', '/prices']
-
 function originOf(url: string): string {
   try {
     return new URL(url).origin
@@ -21,32 +19,17 @@ function originOf(url: string): string {
   }
 }
 
-function joinPath(origin: string, path: string): string {
-  if (path === '/') return origin + '/'
-  return origin.replace(/\/$/, '') + path
-}
-
 async function pricesFromSite(pageUrl: string): Promise<{ prices: string[]; note: string }> {
   const origin = originOf(pageUrl)
   if (!origin) return { prices: [], note: 'No website on Google.' }
   if (!hasScrapingBee()) return { prices: [], note: 'No public prices pulled (ScrapingBee not set).' }
 
-  const seen = new Set<string>()
   const collected: string[] = []
-  const start = pageUrl.startsWith('http') ? pageUrl : origin
-  const urls = [start, ...PRICE_PATHS.map((p) => joinPath(origin, p))].filter((u) => {
-    if (seen.has(u)) return false
-    seen.add(u)
-    return true
-  })
-
-  for (const u of urls.slice(0, 3)) {
-    const html = await fetchPublicHtml(u).catch(() => '')
-    if (!html) continue
-    for (const p of extractPublicPrices(html)) {
-      if (!collected.includes(p)) collected.push(p)
-    }
-    if (collected.length >= 6) break
+  const start = pageUrl.startsWith('http') ? pageUrl : `${origin}/`
+  const html = await fetchPublicHtml(start).catch(() => '')
+  if (!html) return { prices: [], note: 'Could not fetch their site.' }
+  for (const p of extractPublicPrices(html)) {
+    if (!collected.includes(p)) collected.push(p)
   }
 
   if (collected.length) return { prices: collected.slice(0, 8), note: 'Public $ found on their site.' }
@@ -75,7 +58,7 @@ export async function runCompetitorHunt(input: {
     }
   }
 
-  const nearby = listings.filter((h) => !isOwnSalon(h.title, ownName)).slice(0, 6)
+  const nearby = listings.filter((h) => !isOwnSalon(h.title, ownName)).slice(0, 4)
 
   if (!nearby.length) {
     return {
@@ -87,19 +70,20 @@ export async function runCompetitorHunt(input: {
     }
   }
 
-  const competitors: CompetitorFact[] = []
-  for (const hit of nearby) {
-    const pulled = await pricesFromSite(hit.url || '')
-    competitors.push({
-      title: hit.title,
-      address: hit.address,
-      ratingSnippet: hit.snippet,
-      url: hit.url,
-      phone: hit.phone,
-      prices: pulled.prices ?? [],
-      priceNote: pulled.note,
-    })
-  }
+  const competitors: CompetitorFact[] = await Promise.all(
+    nearby.map(async (hit) => {
+      const pulled = await pricesFromSite(hit.url || '')
+      return {
+        title: hit.title,
+        address: hit.address,
+        ratingSnippet: hit.snippet,
+        url: hit.url,
+        phone: hit.phone,
+        prices: pulled.prices ?? [],
+        priceNote: pulled.note,
+      }
+    }),
+  )
 
   const withPrices = competitors.filter((c) => (c.prices?.length ?? 0) > 0).length
   return {

@@ -1,5 +1,4 @@
 import type { SalonContext } from './demo-salon'
-import { snapshotBookGaps } from './book-gaps'
 import { extractPublicPrices, isOwnSalon } from './competitor-prices'
 
 export { extractPublicPrices, isOwnSalon }
@@ -26,7 +25,6 @@ export function formatCompetitorExtra(
   notes: string,
   competitors: CompetitorFact[] = [],
 ): string {
-  const snap = snapshotBookGaps()
   const list = competitors ?? []
   const pulled = list.length
     ? list
@@ -49,7 +47,6 @@ export function formatCompetitorExtra(
     'OUR FLOOR:',
     `${salon.name} · ${salon.city} · ${salon.brandTone}`,
     `Menu: ${salon.services.join(', ')}`,
-    `${snap.openChairs.length} open chairs tomorrow. ${snap.rebookDue.length} color returns due.`,
     'PULLED LOCAL COMPETITORS (Google Places + public $ on their site). Do not invent missing prices or occupancy:',
     pulled,
     'OWNER NOTES (optional extra, not a substitute for pulled facts):',
