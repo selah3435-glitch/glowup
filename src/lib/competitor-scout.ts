@@ -27,10 +27,11 @@ export function formatCompetitorExtra(
   competitors: CompetitorFact[] = [],
 ): string {
   const snap = snapshotBookGaps()
-  const pulled = competitors.length
-    ? competitors
+  const list = competitors ?? []
+  const pulled = list.length
+    ? list
         .map((c) => {
-          const prices = c.prices.length ? c.prices.join(' | ') : c.priceNote
+          const prices = c.prices?.length ? c.prices.join(' | ') : c.priceNote
           return [
             `- ${c.title}`,
             c.address ? `  address: ${c.address}` : '',

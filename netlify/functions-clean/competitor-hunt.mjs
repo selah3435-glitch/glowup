@@ -41,9 +41,23 @@ export async function handler(event) {
     return {
       statusCode: 401,
       headers: cors(),
-      body: JSON.stringify({ error: 'salonKey or admin token required' }),
+      body: JSON.stringify({
+        city,
+        competitors: [],
+        note: '',
+        error: 'salonKey or admin token required',
+      }),
     }
   }
   const result = await runCompetitorHunt({ city, ownName })
-  return { statusCode: 200, headers: cors(), body: JSON.stringify(result) }
+  return {
+    statusCode: 200,
+    headers: cors(),
+    body: JSON.stringify({
+      city: result.city || city,
+      competitors: result.competitors || [],
+      note: result.note || '',
+      error: result.error,
+    }),
+  }
 }

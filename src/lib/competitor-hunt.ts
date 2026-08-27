@@ -63,9 +63,9 @@ export async function runCompetitorHunt(input: {
     return { city, competitors: [], note: '', error: 'Set a city in Brand / onboarding first.' }
   }
 
-  let listings
+  let listings: Awaited<ReturnType<typeof searchNearbySalons>> = []
   try {
-    listings = await searchNearbySalons(city)
+    listings = (await searchNearbySalons(city)) || []
   } catch (e) {
     return {
       city,
@@ -89,19 +89,19 @@ export async function runCompetitorHunt(input: {
 
   const competitors: CompetitorFact[] = []
   for (const hit of nearby) {
-    const pulled = await pricesFromSite(hit.url)
+    const pulled = await pricesFromSite(hit.url || '')
     competitors.push({
       title: hit.title,
       address: hit.address,
       ratingSnippet: hit.snippet,
       url: hit.url,
       phone: hit.phone,
-      prices: pulled.prices,
+      prices: pulled.prices ?? [],
       priceNote: pulled.note,
     })
   }
 
-  const withPrices = competitors.filter((c) => c.prices.length).length
+  const withPrices = competitors.filter((c) => (c.prices?.length ?? 0) > 0).length
   return {
     city,
     competitors,

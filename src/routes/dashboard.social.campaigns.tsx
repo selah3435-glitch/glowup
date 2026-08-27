@@ -388,15 +388,14 @@ function SocialCampaigns() {
     setCompHuntBusy(true)
     setHuntNote(`Hunting nearby floors in ${salon.city} and reading public $…`)
     const result = await huntLocalCompetitors(salon.city, salon.name)
-    setCompetitors(result.competitors)
+    const list = result.competitors ?? []
+    setCompetitors(list)
     setCompHuntBusy(false)
     setHuntNote(
       result.error
         ? result.error
         : result.note ||
-            (result.competitors.length
-              ? `Found ${result.competitors.length} nearby floors.`
-              : 'No competitors pulled.'),
+            (list.length ? `Found ${list.length} nearby floors.` : 'No competitors pulled.'),
     )
   }
 
@@ -853,7 +852,7 @@ function SocialCampaigns() {
                 <strong>{c.title}</strong>
                 <span>
                   {c.ratingSnippet || c.address || 'Google listing'}
-                  {c.prices.length
+                  {c.prices?.length
                     ? ` · ${c.prices.slice(0, 3).join(' · ')}`
                     : ` · ${c.priceNote}`}
                 </span>
