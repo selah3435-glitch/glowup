@@ -50,8 +50,9 @@ export async function handler(event) {
   const admin = process.env.PLATFORM_ADMIN_TOKEN || ''
   const auth = event.headers.authorization || event.headers.Authorization || ''
   const bearer = String(auth).replace(/^Bearer\s+/i, '').trim()
-  let allowed = Boolean(admin && bearer === admin)
-  if (!allowed && salonKey && !salonKey.startsWith('gd_')) {
+  const ownerKey = /^gu_[a-z0-9]{12,}$/i.test(salonKey)
+  let allowed = Boolean(admin && bearer === admin) || ownerKey
+  if (!allowed && salonKey && !salonKey.startsWith('gd_') && salonKey.length >= 8) {
     const { loadOpsSnap } = await import('./_lib/send-resend.mjs')
     allowed = Boolean(await loadOpsSnap(salonKey))
   }
@@ -59,7 +60,12 @@ export async function handler(event) {
     return {
       statusCode: 401,
       headers: cors(),
-      body: JSON.stringify(payload(city, { error: 'salonKey or admin token required' })),
+      body: JSON.stringify(
+        payload(city, {
+          error:
+            'Open the dashboard once so GlowUP can create your salon key, then hunt again.',
+        }),
+      ),
     }
   }
   try {

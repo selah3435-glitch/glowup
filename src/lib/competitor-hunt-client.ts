@@ -35,14 +35,15 @@ export async function huntLocalCompetitors(
   city: string,
   ownName: string,
 ): Promise<CompetitorHuntResult> {
+  const { ensureSalonSyncKey } = await import('./ops-settings')
+  const salonKey = ensureSalonSyncKey()
+
   try {
     const server = await huntCompetitorsServer({ data: { city, ownName } })
     const normalized = normalizeHunt(server, city)
-    if (normalized.competitors.length || normalized.error || normalized.note) {
-      return normalized
-    }
+    if (normalized.competitors.length) return normalized
   } catch {
-    /* HTTP fallback */
+    /* HTTP is the real path on static Netlify */
   }
 
   for (const path of ENDPOINTS) {
@@ -55,7 +56,7 @@ export async function huntLocalCompetitors(
         body: JSON.stringify({
           city,
           ownName,
-          salonKey: (await import('./ops-settings')).loadOpsSettings().salonSyncKey,
+          salonKey,
         }),
         signal: controller.signal,
       })
