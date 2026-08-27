@@ -156,6 +156,27 @@ function placeToHit(p: Place, city: string): DiscoveredSalon | null {
   })
 }
 
+/** Nearby Google Places only — used by Competitor Scout (no Apify / IG). */
+export async function searchNearbySalons(city: string): Promise<DiscoveredSalon[]> {
+  const queries = [`hair salon ${city}`, `nail salon ${city}`, `beauty salon ${city}`]
+  const out: DiscoveredSalon[] = []
+  const seen = new Set<string>()
+  if (!serperApiKey()) return out
+  for (const q of queries) {
+    const data = (await serperPost('places', { q, page: 1 })) as { places?: Place[] } | null
+    if (!data) continue
+    for (const p of data.places || []) {
+      const hit = placeToHit(p, city)
+      if (!hit) continue
+      const key = (hit.phone || hit.url || hit.title).toLowerCase()
+      if (seen.has(key)) continue
+      seen.add(key)
+      out.push(hit)
+    }
+  }
+  return out
+}
+
 async function searchGooglePlaces(city: string): Promise<DiscoveredSalon[]> {
   const queries = [
     `hair salon ${city}`,

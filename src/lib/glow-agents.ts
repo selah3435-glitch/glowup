@@ -81,7 +81,7 @@ export const GLOW_AGENTS: GlowAgent[] = [
     id: 'competitor_scout',
     name: 'Competitor Scout',
     tagline: 'What we know — nothing invented',
-    description: 'Brief and positioning from owner notes plus your menu and book.',
+    description: 'Nearby Google listings plus public $ on their sites. Missing prices stay “not listed.”',
   },
   {
     id: 'lead_scout',
@@ -106,6 +106,27 @@ export const GLOW_AGENTS: GlowAgent[] = [
 
 export function getAgent(id: string): GlowAgent | undefined {
   return GLOW_AGENTS.find((agent) => agent.id === id)
+}
+
+/** Where the owner actually runs this agent (not the Concierge catalog). */
+export const AGENT_HREF: Record<GlowAgentId, string> = {
+  front_desk: '/dashboard/social/campaigns#front-desk',
+  book_closer: '/dashboard/social/campaigns#book-closer',
+  trend_scout: '/dashboard/social/campaigns#trend-scout',
+  chair_content: '/dashboard/social/studio?from=chair',
+  shorts: '/dashboard/social/campaigns#shorts',
+  reputation: '/dashboard/social/campaigns#reputation',
+  retail_services: '/dashboard/social/campaigns#retail',
+  fill_the_book: '/dashboard/social/campaigns#fill-the-book',
+  copywriter: '/dashboard/social/campaigns#copywriter',
+  competitor_scout: '/dashboard/social/campaigns#competitor-scout',
+  lead_scout: '/dashboard/social/campaigns#lead-scout',
+  local_seo: '/dashboard/social/campaigns#local-seo',
+  company_lead_scout: '/dashboard/platform#company-lead-scout',
+}
+
+export function agentHref(id: string): string | undefined {
+  return AGENT_HREF[id as GlowAgentId]
 }
 
 export type PostStatus =
@@ -155,7 +176,7 @@ export function buildDemoConcierge(salonName: string, bookingUrl: string): Conci
       title: 'Turn today’s gloss into a Reel draft',
       body: `Chair Content can draft a brand-toned Reel from your last gloss service at ${salonName}. Stylists submit; you approve.`,
       actionLabel: 'Open Studio',
-      actionHref: '/dashboard/social/studio?from=chair',
+      actionHref: AGENT_HREF.chair_content,
     },
     {
       id: 'c2',
@@ -163,7 +184,7 @@ export function buildDemoConcierge(salonName: string, bookingUrl: string): Conci
       title: 'This week’s angle from your menu',
       body: 'Trend Scout uses your services, season, and live book. No invented rankings.',
       actionLabel: 'Open Trend Scout',
-      actionHref: '/dashboard/social/campaigns',
+      actionHref: AGENT_HREF.trend_scout,
     },
     {
       id: 'c3',
@@ -171,7 +192,7 @@ export function buildDemoConcierge(salonName: string, bookingUrl: string): Conci
       title: '3 clients are ready to rebook',
       body: `Fill the Book drafted a soft social teaser. ${bookHint}`,
       actionLabel: 'Review campaign draft',
-      actionHref: '/dashboard/social/campaigns',
+      actionHref: AGENT_HREF.fill_the_book,
     },
     {
       id: 'c4',
@@ -179,7 +200,7 @@ export function buildDemoConcierge(salonName: string, bookingUrl: string): Conci
       title: 'Send review requests for yesterday',
       body: 'Reputation Agent prepared post-visit asks with a dual path to Google when clients are happy.',
       actionLabel: 'Review asks',
-      actionHref: '/dashboard/social/campaigns',
+      actionHref: AGENT_HREF.reputation,
     },
   ]
 }

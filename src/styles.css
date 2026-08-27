@@ -268,6 +268,21 @@ button { color: inherit; }
   --beige: #d4c4c8;
   --emerald: #0f3d3e;
   --emerald-mid: #1a4d4a;
+  --radius-btn: 14px;
+  --radius-card: 18px;
+  --radius-input: 12px;
+  --elev-card:
+    inset 0 1px 0 rgba(255, 236, 228, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 10px 24px rgba(6, 3, 4, 0.5),
+    0 1px 0 rgba(232, 168, 180, 0.1);
+  --elev-btn:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 7px 18px rgba(196, 122, 140, 0.32),
+    0 2px 0 rgba(72, 32, 42, 0.4);
+  --elev-ghost:
+    inset 0 1px 0 rgba(255, 236, 228, 0.1),
+    0 6px 16px rgba(6, 3, 4, 0.35);
   min-height: 100vh;
   display: flex;
   background: var(--black);
@@ -1270,7 +1285,8 @@ button { color: inherit; }
 .pulse-ideas article,
 .recipe-grid article,
 .concierge-cards article,
-.agents-grid article {
+.agents-grid article,
+.agents-grid a.agent-card-link {
   padding: 18px;
   border: 1px solid #2e2a22;
   background: var(--paper);
@@ -1673,6 +1689,33 @@ button { color: inherit; }
   margin: 4px 0 8px;
   color: var(--gold);
   font-size: 11px;
+}
+a.agent-card-link {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+a.agent-card-link:hover,
+a.agent-card-link:focus-visible {
+  border-color: var(--gold);
+  outline: none;
+}
+a.agent-card-link em {
+  margin-top: auto;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.scan-card[id] {
+  scroll-margin-top: 88px;
+}
+#copywriter {
+  scroll-margin-top: 88px;
 }
 .partner-footnote {
   margin-top: 18px;
@@ -2638,4 +2681,96 @@ button { color: inherit; }
 .ai-rec-embed .ai-rec-panel {
   width: 100%;
   height: min(560px, 70vh);
+}
+
+/* Dashboard elevation — raised surfaces, rounder corners. Marketing unchanged. */
+.dashboard-page .button {
+  border-radius: var(--radius-btn);
+  box-shadow: var(--elev-ghost);
+}
+.dashboard-page .button:hover {
+  transform: translateY(-1px);
+}
+.dashboard-page .button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(6, 3, 4, 0.3);
+}
+.dashboard-page .button-dark {
+  box-shadow: var(--elev-btn);
+}
+.dashboard-page .button-dark:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 22px rgba(196, 122, 140, 0.4),
+    0 2px 0 rgba(72, 32, 42, 0.35);
+}
+.dashboard-page .button-cream {
+  background: rgba(22, 18, 20, 0.7);
+  box-shadow: var(--elev-ghost);
+}
+.dashboard-page .button-small {
+  border-radius: 12px;
+}
+.dashboard-page .metric-grid article,
+.dashboard-page .scan-card,
+.dashboard-page .support-card,
+.dashboard-page .studio-switcher,
+.dashboard-page .pulse-ideas article,
+.dashboard-page .recipe-grid article,
+.dashboard-page .concierge-cards article,
+.dashboard-page .agents-grid article,
+.dashboard-page .agents-grid a.agent-card-link,
+.dashboard-page .copy-pack-preview,
+.dashboard-page .post-row,
+.dashboard-page .approval-list article,
+.dashboard-page .source-box,
+.dashboard-page .consent-box,
+.dashboard-page .platform-picks,
+.dashboard-page .icp-guide,
+.dashboard-page .crm-toolbar,
+.dashboard-page .ops-outbox li,
+.dashboard-page .cal-add-form,
+.dashboard-page .rebook-card,
+.dashboard-page .week-card,
+.dashboard-page .chair-lead,
+.dashboard-page .book-gap-bar,
+.dashboard-page .toast {
+  border-radius: var(--radius-card);
+  box-shadow: var(--elev-card);
+}
+.dashboard-page .field-label input,
+.dashboard-page .field-label select,
+.dashboard-page .field-label textarea,
+.dashboard-page .dashboard-search kbd,
+.dashboard-page .icon-button,
+.dashboard-page .menu-button,
+.dashboard-page .cal-add-form input,
+.dashboard-page .cal-add-form select {
+  border-radius: var(--radius-input);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 236, 228, 0.06);
+}
+.dashboard-page .dashboard-sidebar nav a,
+.dashboard-page .dashboard-sidebar nav button,
+.dashboard-page .sidebar-bottom > button {
+  border-radius: 12px;
+}
+.dashboard-page .social-tabs a {
+  border-radius: 999px;
+  box-shadow: var(--elev-ghost);
+}
+.dashboard-page .dashboard-search {
+  padding: 8px 14px;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(232, 168, 180, 0.16);
+  background: var(--card);
+  box-shadow: var(--elev-ghost);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page .button:hover,
+  .dashboard-page .button:active:not(:disabled) {
+    transform: none;
+  }
 }

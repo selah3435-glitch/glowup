@@ -54,6 +54,19 @@ function PlatformPage() {
     void load()
   }, [load])
 
+  useEffect(() => {
+    const jump = () => {
+      const id = window.location.hash.replace(/^#/, '')
+      if (!id) return
+      window.setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 50)
+    }
+    jump()
+    window.addEventListener('hashchange', jump)
+    return () => window.removeEventListener('hashchange', jump)
+  }, [])
+
   const [scoutRows, setScoutRows] = useState<CompanyScoutRow[]>([])
   const [form, setForm] = useState({
     salonName: '',
@@ -310,7 +323,7 @@ function PlatformPage() {
         )}
       </section>
 
-      <section className="scan-card" style={{ marginTop: '1.5rem' }}>
+      <section className="scan-card" id="company-lead-scout" style={{ marginTop: '1.5rem' }}>
         <span className="agent-chip">{getAgent('company_lead_scout')?.name}</span>
         <h3>Company Lead Scout — sell GlowUP</h3>
         <p className="muted-copy">

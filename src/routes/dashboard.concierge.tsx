@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { ArrowUpRight, Bot, Check, X } from 'lucide-react'
-import { buildDemoConcierge, DEMO_POSTS, GLOW_AGENTS, getAgent, statusLabel } from '../lib/glow-agents'
+import { AGENT_HREF, buildDemoConcierge, DEMO_POSTS, GLOW_AGENTS, getAgent, statusLabel } from '../lib/glow-agents'
 import { loadSalonContext } from '../lib/demo-salon'
 import { listPendingDrafts, setDraftStatus, type StudioDraft } from '../lib/draft-store'
 import type { DemoPost } from '../lib/glow-agents'
@@ -114,11 +114,12 @@ function GlowConcierge() {
         <h2>Glow Agents</h2>
         <div className="agents-grid">
           {GLOW_AGENTS.map((agent) => (
-            <article key={agent.id}>
+            <a key={agent.id} className="agent-card-link" href={AGENT_HREF[agent.id]}>
               <strong>{agent.name}</strong>
               <span>{agent.tagline}</span>
               <p>{agent.description}</p>
-            </article>
+              <em>Open {agent.name}</em>
+            </a>
           ))}
         </div>
         <p className="partner-footnote">Built as GlowUP · systems DNA from JAWSAI911</p>

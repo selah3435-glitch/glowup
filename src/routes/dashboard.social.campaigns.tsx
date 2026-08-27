@@ -27,7 +27,8 @@ import { buildTrendCards, formatTrendExtra, type TrendCard } from '../lib/trend-
 import { formatRetailExtra, formatShortsExtra, listMenuItems } from '../lib/retail-menu'
 import { listChairMoments } from '../lib/chair-content'
 import { formatLeadScoutExtra, listScoutRows, type ScoutRow } from '../lib/lead-scout'
-import { formatCompetitorExtra, formatSeoExtra } from '../lib/competitor-scout'
+import { formatCompetitorExtra, formatSeoExtra, type CompetitorFact } from '../lib/competitor-scout'
+import { huntLocalCompetitors } from '../lib/competitor-hunt-client'
 import { saveSalonContext } from '../lib/demo-salon'
 
 export const Route = createFileRoute('/dashboard/social/campaigns')({
@@ -101,7 +102,21 @@ function SocialCampaigns() {
   const [scoutBusy, setScoutBusy] = useState<string | null>(null)
   const [compNotes, setCompNotes] = useState(salon.competitorNotes || '')
   const [compBusy, setCompBusy] = useState(false)
+  const [compHuntBusy, setCompHuntBusy] = useState(false)
+  const [competitors, setCompetitors] = useState<CompetitorFact[]>([])
+  const [huntNote, setHuntNote] = useState('')
   const [seoBusy, setSeoBusy] = useState(false)
+
+  useEffect(() => {
+    const jump = () => {
+      const id = window.location.hash.replace(/^#/, '')
+      if (!id) return
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    jump()
+    window.addEventListener('hashchange', jump)
+    return () => window.removeEventListener('hashchange', jump)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -365,17 +380,41 @@ function SocialCampaigns() {
     )
   }
 
+  async function huntCompetitors() {
+    if (!salon.city.trim()) {
+      setHuntNote('Add a city in Brand / onboarding first.')
+      return
+    }
+    setCompHuntBusy(true)
+    setHuntNote(`Hunting nearby floors in ${salon.city} and reading public $…`)
+    const result = await huntLocalCompetitors(salon.city, salon.name)
+    setCompetitors(result.competitors)
+    setCompHuntBusy(false)
+    setHuntNote(
+      result.error
+        ? result.error
+        : result.note ||
+            (result.competitors.length
+              ? `Found ${result.competitors.length} nearby floors.`
+              : 'No competitors pulled.'),
+    )
+  }
+
   async function draftCompetitor() {
     setCompBusy(true)
     saveSalonContext({ competitorNotes: compNotes })
-    setNote('Competitor Scout is writing from your notes…')
+    setNote(
+      competitors.length
+        ? 'Competitor Scout is writing from Google listings and public $…'
+        : 'No hunt yet — writing from notes only. Hunt competitors for live prices.',
+    )
     const result = await generateCopyPack({
       salonName: salon.name,
       city: salon.city,
       brandTone: salon.brandTone,
       service: salon.services[0],
       campaign: 'competitor',
-      extra: formatCompetitorExtra({ ...salon, competitorNotes: compNotes }, compNotes),
+      extra: formatCompetitorExtra({ ...salon, competitorNotes: compNotes }, compNotes, competitors),
     })
     setPack(result.pack)
     setPackFor('competitor')
@@ -383,9 +422,9 @@ function SocialCampaigns() {
     setNote(
       result.fallback
         ? `Offline pack${result.error ? ` (${result.error})` : ''}.`
-        : compNotes.trim()
-          ? 'Brief ready. Social does not attack the rival by name.'
-          : 'No competitor notes — add what you know in Brand or the box above.',
+        : competitors.length
+          ? 'Brief ready from pulled listings. Social does not attack a competitor by name. Missing $ stayed “not listed.”'
+          : 'Brief from notes only. Hunt competitors to pull Google + public prices.',
     )
   }
 
@@ -464,7 +503,7 @@ function SocialCampaigns() {
 
   return (
     <div className="campaigns-module">
-      <h2>Campaigns</h2>
+      <h2 id="copywriter">Campaigns</h2>
       <p className="muted-copy">
         Fill the Book reads tomorrow’s chairs and return windows. Agent: {getAgent('fill_the_book')?.name} · writer:{' '}
         {getAgent('copywriter')?.name}.
@@ -485,7 +524,7 @@ function SocialCampaigns() {
         </span>
       </div>
 
-      <section className="scan-card">
+      <section className="scan-card" id="fill-the-book">
         <h3>Tonight’s fill</h3>
         <p className="muted-copy">
           Scans tomorrow’s empty chairs, then drafts one note for the quiet guest with the most
@@ -785,26 +824,57 @@ function SocialCampaigns() {
       <section className="scan-card" id="competitor-scout">
         <h3>Competitor Scout</h3>
         <p className="muted-copy">
-          Uses only notes you type plus your menu and book. Will not invent their occupancy, prices,
-          or review count.
+          Hunts nearby salons in {salon.city || 'your city'} on Google, then reads public $ on their
+          sites. Will not invent occupancy or a price that is not on the page.
         </p>
+        <div className="recipe-actions">
+          <button
+            type="button"
+            className="button button-dark button-small"
+            disabled={compHuntBusy || !salon.city.trim()}
+            onClick={() => void huntCompetitors()}
+          >
+            {compHuntBusy ? 'Hunting…' : 'Hunt nearby competitors'}
+          </button>
+          <button
+            type="button"
+            className="button button-cream button-small"
+            disabled={compBusy}
+            onClick={() => void draftCompetitor()}
+          >
+            {compBusy ? 'Writing…' : 'Draft brief'}
+          </button>
+        </div>
+        {huntNote && <p className="muted-copy">{huntNote}</p>}
+        {competitors.length > 0 && (
+          <ul className="review-visit-list">
+            {competitors.map((c) => (
+              <li key={c.url || c.title}>
+                <strong>{c.title}</strong>
+                <span>
+                  {c.ratingSnippet || c.address || 'Google listing'}
+                  {c.prices.length
+                    ? ` · ${c.prices.slice(0, 3).join(' · ')}`
+                    : ` · ${c.priceNote}`}
+                </span>
+                {c.url.startsWith('http') && !/google\.com\/search/i.test(c.url) ? (
+                  <a href={c.url} target="_blank" rel="noreferrer">
+                    Site
+                  </a>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
         <label className="field-label">
-          What you know about a rival
+          Extra you know (optional)
           <textarea
-            rows={4}
+            rows={3}
             value={compNotes}
             onChange={(e) => setCompNotes(e.target.value)}
-            placeholder="e.g. Other salon on Melrose posts daily Reels, no online book, $200+ balayage on their site"
+            placeholder="Optional — anything Google won’t show (they don’t book online, waitlist only…)"
           />
         </label>
-        <button
-          type="button"
-          className="button button-dark button-small"
-          disabled={compBusy}
-          onClick={() => void draftCompetitor()}
-        >
-          {compBusy ? 'Writing…' : 'Draft brief'}
-        </button>
       </section>
 
       <section className="scan-card" id="lead-scout">

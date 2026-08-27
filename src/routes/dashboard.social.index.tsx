@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { ArrowUpRight, Check } from 'lucide-react'
-import { getAgent, statusLabel } from '../lib/glow-agents'
+import { AGENT_HREF, getAgent, statusLabel } from '../lib/glow-agents'
 import { listChairMoments } from '../lib/chair-content'
 import { listDrafts, listPendingDrafts, listReadyDrafts } from '../lib/draft-store'
 import { buildTrendCards } from '../lib/trend-scout'
@@ -86,73 +86,73 @@ function SocialPulse() {
             <span className="agent-chip">{getAgent('fill_the_book')?.name}</span>
             <h3>Rebook nudge — color refresh</h3>
             <p>Social teaser that pairs with your external booking link.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.fill_the_book}>
               Open campaign
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('reputation')?.name}</span>
             <h3>Review asks — yesterday</h3>
             <p>Thank-you texts from real visits. Nothing sends until you tap Send.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.reputation}>
               Open Reputation
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('front_desk')?.name}</span>
             <h3>Reply to a comment</h3>
             <p>On-brand answer. You paste it back to Instagram or DMs. GlowUP does not post.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.front_desk}>
               Open Front Desk
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('book_closer')?.name}</span>
             <h3>Close a hot comment</h3>
             <p>One booking ask from their words. Uses your real booking URL only.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.book_closer}>
               Open Book Closer
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('shorts')?.name}</span>
             <h3>Hooks for Reels</h3>
             <p>Three first lines from a real menu service. No invented virality.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.shorts}>
               Open Shorts
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('retail_services')?.name}</span>
             <h3>Spotlight a menu item</h3>
             <p>One service from Brand. No invented price.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.retail_services}>
               Open Retail
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('competitor_scout')?.name}</span>
             <h3>Competitor brief</h3>
             <p>From your notes only. No invented occupancy.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.competitor_scout}>
               Open Competitor Scout
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('lead_scout')?.name}</span>
             <h3>Rank who’s already here</h3>
             <p>CRM + overdue book, scored on facts.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.lead_scout}>
               Open Lead Scout
-            </Link>
+            </a>
           </article>
           <article>
             <span className="agent-chip">{getAgent('local_seo')?.name}</span>
             <h3>Title, meta, GBP</h3>
             <p>Local copy from name, city, and menu.</p>
-            <Link className="button button-cream button-small" to="/dashboard/social/campaigns">
+            <a className="button button-cream button-small" href={AGENT_HREF.local_seo}>
               Open Local SEO
-            </Link>
+            </a>
           </article>
         </div>
       </section>

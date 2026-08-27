@@ -94,7 +94,7 @@ const CAMPAIGN_HINT: Record<CopyCampaign, string> = {
   book_closer: 'Turn a high-intent comment or DM into one booking ask. Use the real booking URL only.',
   trend: 'One grounded weekly angle from menu, season, and the live book. No fake rankings.',
   shorts: 'Three spoken hooks plus a Reel/TikTok caption for one real service.',
-  competitor: 'Internal brief + positioning from owner notes only. No invented rival stats.',
+  competitor: 'Internal brief + positioning from pulled local competitors. No invented competitor stats.',
   lead_scout: 'Outreach for one ranked CRM or book row. Fact-points, not a fake percent.',
   seo: 'Title, meta, and GBP post from name, city, and menu. No invented rankings.',
   company_lead: 'B2B outreach to a salon about GlowUP the OS. Not a guest rebook.',

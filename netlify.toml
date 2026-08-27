@@ -29,6 +29,12 @@
   force = true
 
 [[redirects]]
+  from = "/api/agents/competitor-hunt"
+  to = "/.netlify/functions/competitor-hunt"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/api/glo/chat"
   to = "/.netlify/functions/glo-chat"
   status = 200

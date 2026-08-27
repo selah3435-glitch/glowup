@@ -36,6 +36,25 @@ export function hasScrapingBee(): boolean {
   return Boolean(getEnv('SCRAPINGBEE_API_KEY'))
 }
 
+/** Fetch public HTML. Empty string if no key or the page fails. */
+export async function fetchPublicHtml(pageUrl: string): Promise<string> {
+  const key = getEnv('SCRAPINGBEE_API_KEY')
+  if (!key) return ''
+  if (!/^https?:\/\//i.test(pageUrl)) return ''
+  if (/google\.com\/search|maps\.google/i.test(pageUrl)) return ''
+  const url = new URL('https://app.scrapingbee.com/api/v1/')
+  url.searchParams.set('api_key', key)
+  url.searchParams.set('url', pageUrl)
+  url.searchParams.set('render_js', 'false')
+  url.searchParams.set('premium_proxy', 'false')
+  const res = await fetch(url.toString(), { signal: AbortSignal.timeout(14000) })
+  if (!res.ok) {
+    console.warn(`[scrapingbee] html ${res.status} ${pageUrl}`)
+    return ''
+  }
+  return res.text()
+}
+
 type Organic = {
   title?: string
   url?: string

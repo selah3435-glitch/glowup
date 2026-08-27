@@ -9,7 +9,7 @@ export interface SalonContext {
   externalBookingUrl: string
   /** Optional Google review link. Empty means Reputation will not invent one. */
   googleReviewUrl: string
-  /** Owner-supplied rival notes. Empty = Competitor Scout will not invent a rival. */
+  /** Owner-supplied competitor notes. Empty = Competitor Scout will not invent a competitor. */
   competitorNotes: string
   partnerOrg: string
   /** Free-text scale signal: solo chair → multi-location */

@@ -45,10 +45,26 @@ Use OKLCH when refactoring tokens. Never pure `#000` / `#fff` for large areas if
 - No bounce/elastic  
 - Avoid animating layout properties  
 
+## Elevation (dashboard)
+
+Surfaces sit off the canvas: a 1px top highlight, a short drop shadow, slightly rounder corners. Not cartoon bevel, not glass.
+
+| Token | Use |
+|---|---|
+| `--radius-btn` | 14px — buttons |
+| `--radius-card` | 18px — cards, panels |
+| `--radius-input` | 12px — fields |
+| `--elev-card` | inset highlight + drop shadow |
+| `--elev-btn` | gold fill pressable |
+| `--elev-ghost` | outline / cream buttons |
+
+Active: `translateY(1px)` and a shorter shadow. Motion 150–250ms ease-out.
+
 ## Components
 
-- Buttons: gold filled (primary), gold outline (secondary)  
-- Inputs: dark card fill, gold/rose focus ring  
+- Buttons: gold filled (primary), gold outline (secondary), raised, 14px radius  
+- Inputs: dark card fill, gold/rose focus ring, 12px radius  
+- Cards / scan panels: 18px radius + `--elev-card`  
 - Toasts: deep panel + gold check  
 - Concierge: editorial panel, not chatbot bubble farm  
 

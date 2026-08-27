@@ -1,15 +1,58 @@
 import type { SalonContext } from './demo-salon'
 import { snapshotBookGaps } from './book-gaps'
+import { extractPublicPrices, isOwnSalon } from './competitor-prices'
 
-export function formatCompetitorExtra(salon: SalonContext, notes: string): string {
+export { extractPublicPrices, isOwnSalon }
+
+export type CompetitorFact = {
+  title: string
+  address?: string
+  ratingSnippet: string
+  url: string
+  phone?: string
+  prices: string[]
+  priceNote: string
+}
+
+export type CompetitorHuntResult = {
+  city: string
+  competitors: CompetitorFact[]
+  note: string
+  error?: string
+}
+
+export function formatCompetitorExtra(
+  salon: SalonContext,
+  notes: string,
+  competitors: CompetitorFact[] = [],
+): string {
   const snap = snapshotBookGaps()
+  const pulled = competitors.length
+    ? competitors
+        .map((c) => {
+          const prices = c.prices.length ? c.prices.join(' | ') : c.priceNote
+          return [
+            `- ${c.title}`,
+            c.address ? `  address: ${c.address}` : '',
+            c.ratingSnippet ? `  google: ${c.ratingSnippet}` : '',
+            c.phone ? `  phone: ${c.phone}` : '',
+            c.url ? `  url: ${c.url}` : '',
+            `  prices: ${prices}`,
+          ]
+            .filter(Boolean)
+            .join('\n')
+        })
+        .join('\n')
+    : '(no Google listings pulled — do not invent a competitor)'
   return [
     'OUR FLOOR:',
     `${salon.name} · ${salon.city} · ${salon.brandTone}`,
     `Menu: ${salon.services.join(', ')}`,
     `${snap.openChairs.length} open chairs tomorrow. ${snap.rebookDue.length} color returns due.`,
-    'COMPETITOR NOTES FROM OWNER (only source for the rival):',
-    notes.trim() || '(none — do not invent a competitor)',
+    'PULLED LOCAL COMPETITORS (Google Places + public $ on their site). Do not invent missing prices or occupancy:',
+    pulled,
+    'OWNER NOTES (optional extra, not a substitute for pulled facts):',
+    notes.trim() || '(none)',
   ].join('\n')
 }
 
