@@ -17,7 +17,7 @@ $required = @(
 )
 foreach ($item in $required) {
   if (-not (Test-Path $item.Path)) {
-    throw "Missing $($item.Path) — run npm run build (vite + scripts/generate-html.mjs) first"
+    throw "Missing $($item.Path) - run npm run build (vite + scripts/generate-html.mjs) first"
   }
   $html = Get-Content $item.Path -Raw
   if ($html -notlike "*$($item.Needle)*") {
