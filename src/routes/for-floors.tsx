@@ -38,6 +38,7 @@ function ForFloorsPage() {
         <nav className="rd-nav-links" aria-label="Primary">
           <Link to="/">Home</Link>
           <Link to="/for-solo">Solo / booth</Link>
+          <a href="/compare/vagaro">Compare</a>
           <a
             className="rd-nav-cta"
             href={TRIAL}
@@ -93,6 +94,9 @@ function ForFloorsPage() {
           <Link to="/">Home</Link>
           <Link to="/for-solo">Solo</Link>
           <a href="/#migrate">Migrate</a>
+          <a href="/compare/vagaro">vs Vagaro</a>
+          <a href="/compare/gloss-genius">vs Gloss Genius</a>
+          <a href="/compare/fresha">vs Fresha</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
         </nav>

@@ -20,6 +20,7 @@ import {
   setSelectedPlanId,
   type PlanId,
 } from '../lib/pricing'
+import { GLOWUP_FAQ } from '../lib/glowup-schema'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -363,6 +364,12 @@ function Home() {
         <a className="rd-btn-primary" href="#audit">
           Request guided migration / gap audit <ChevronRight size={16} />
         </a>
+        <p className="rd-migrate-compare">
+          Comparing stacks? GlowUP. vs{' '}
+          <a href="/compare/vagaro">Vagaro</a>,{' '}
+          <a href="/compare/gloss-genius">Gloss Genius</a>, and{' '}
+          <a href="/compare/fresha">Fresha</a>.
+        </p>
       </section>
 
       <section className="rd-section" id="essentials">
@@ -583,6 +590,26 @@ function Home() {
         </div>
       </section>
 
+      <section className="rd-section" id="faq">
+        <div className="rd-section-head">
+          <p className="rd-kicker">owners · questions</p>
+          <h2>
+            Straight answers
+            <br />
+            <em>before you start.</em>
+          </h2>
+          <p>Glo is native to GlowUP. Pricing is public. The book is live.</p>
+        </div>
+        <div className="rd-faq-list">
+          {GLOWUP_FAQ.map((item) => (
+            <details key={item.q} className="rd-faq-item">
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       <section className="rd-final" id="contact">
         <h2>Ready for GlowUP.?</h2>
         <p>
@@ -605,7 +632,11 @@ function Home() {
           <a href="#essentials">Product</a>
           <a href="/for-floors">Multi-stylist</a>
           <a href="/for-solo">Solo / booth</a>
+          <a href="#faq">FAQ</a>
           <a href="#migrate">Migrate</a>
+          <a href="/compare/vagaro">vs Vagaro</a>
+          <a href="/compare/gloss-genius">vs Gloss Genius</a>
+          <a href="/compare/fresha">vs Fresha</a>
           <a href="#audit">Gap audit</a>
           <a
             href={TRIAL_HREF}

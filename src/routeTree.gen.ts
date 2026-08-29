@@ -26,6 +26,7 @@ import { Route as DashboardConciergeRouteImport } from './routes/dashboard.conci
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as DashboardCalendarRouteImport } from './routes/dashboard.calendar'
 import { Route as BookSalonKeyRouteImport } from './routes/book.$salonKey'
+import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as DashboardSocialIndexRouteImport } from './routes/dashboard.social.index'
 import { Route as DashboardSocialStudioRouteImport } from './routes/dashboard.social.studio'
 import { Route as DashboardSocialScheduleRouteImport } from './routes/dashboard.social.schedule'
@@ -117,6 +118,11 @@ const BookSalonKeyRoute = BookSalonKeyRouteImport.update({
   path: '/book/$salonKey',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareSlugRoute = CompareSlugRouteImport.update({
+  id: '/compare/$slug',
+  path: '/compare/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardSocialIndexRoute = DashboardSocialIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/book/$salonKey': typeof BookSalonKeyRoute
+  '/compare/$slug': typeof CompareSlugRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/concierge': typeof DashboardConciergeRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/book/$salonKey': typeof BookSalonKeyRoute
+  '/compare/$slug': typeof CompareSlugRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/concierge': typeof DashboardConciergeRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/book/$salonKey': typeof BookSalonKeyRoute
+  '/compare/$slug': typeof CompareSlugRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/concierge': typeof DashboardConciergeRoute
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/book/$salonKey'
+    | '/compare/$slug'
     | '/dashboard/calendar'
     | '/dashboard/clients'
     | '/dashboard/concierge'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/book/$salonKey'
+    | '/compare/$slug'
     | '/dashboard/calendar'
     | '/dashboard/clients'
     | '/dashboard/concierge'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/book/$salonKey'
+    | '/compare/$slug'
     | '/dashboard/calendar'
     | '/dashboard/clients'
     | '/dashboard/concierge'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   BookSalonKeyRoute: typeof BookSalonKeyRoute
+  CompareSlugRoute: typeof CompareSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -421,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookSalonKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare/$slug': {
+      id: '/compare/$slug'
+      path: '/compare/$slug'
+      fullPath: '/compare/$slug'
+      preLoaderRoute: typeof CompareSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/social/': {
       id: '/dashboard/social/'
       path: '/'
@@ -515,6 +535,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   BookSalonKeyRoute: BookSalonKeyRoute,
+  CompareSlugRoute: CompareSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

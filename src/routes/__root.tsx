@@ -3,6 +3,7 @@ import { CallbackHandler } from '../components/CallbackHandler'
 import { CookieConsent } from '../components/CookieConsent'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { IdentityProvider } from '../lib/identity-context'
+import { GLOWUP_JSON_LD } from '../lib/glowup-schema'
 
 import '../styles.css'
 
@@ -27,6 +28,9 @@ export const Route = createRootRoute({
       {
         name: 'theme-color',
         content: '#f7f4ef',
+      },
+      {
+        'script:ld+json': GLOWUP_JSON_LD,
       },
     ],
     links: [
