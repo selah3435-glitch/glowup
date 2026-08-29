@@ -1,16 +1,43 @@
 /**
- * Prerender the marketing homepage into dist/client/index.html.
- * `vite build` emits client assets + dist/server; Git/Netlify deploys
- * only publish dist/client, so without this step the live site 404s.
+ * Prerender marketing HTML into dist/client so Git/Netlify static
+ * publishes are not a 404 and vs pages are crawlable without JS.
+ * `vite build` emits client assets + dist/server; only dist/client is published.
  */
 import { pathToFileURL } from 'node:url'
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 
 const root = process.cwd()
 const serverPath = join(root, 'dist/server/server.js')
 const clientDir = join(root, 'dist/client')
-const indexPath = join(clientDir, 'index.html')
+const origin = 'https://glowupbeautysolutions.com'
+
+const PAGES = [
+  {
+    path: '/',
+    file: 'index.html',
+    mustInclude: ['GlowUP', 'What is GlowUP'],
+    mustNotInclude: [],
+  },
+  {
+    path: '/compare/vagaro',
+    file: 'compare/vagaro/index.html',
+    mustInclude: ['GlowUP. vs Vagaro', 'compare-answer'],
+    mustNotInclude: ['Stop losing'],
+  },
+  {
+    path: '/compare/gloss-genius',
+    file: 'compare/gloss-genius/index.html',
+    mustInclude: ['GlowUP. vs Gloss Genius', 'compare-answer'],
+    mustNotInclude: ['Stop losing'],
+  },
+  {
+    path: '/compare/fresha',
+    file: 'compare/fresha/index.html',
+    mustInclude: ['GlowUP. vs Fresha', 'compare-answer'],
+    mustNotInclude: ['Stop losing'],
+  },
+]
 
 if (!existsSync(serverPath)) {
   console.error('Missing dist/server/server.js — run vite build first')
@@ -25,22 +52,32 @@ if (typeof entry?.fetch !== 'function') {
   process.exit(1)
 }
 
-const res = await entry.fetch(
-  new Request('https://glowupbeautysolutions-260.netlify.app/'),
-)
-const html = await res.text()
-console.log('status', res.status, 'html length', html.length)
+async function prerender(page) {
+  const res = await entry.fetch(new Request(`${origin}${page.path}`))
+  const html = await res.text()
+  console.log(page.path, 'status', res.status, 'html length', html.length)
 
-if (res.status !== 200 || !html || html.length < 100) {
-  console.error('Prerender failed — not writing index.html')
-  process.exit(2)
+  if (res.status !== 200 || !html || html.length < 100) {
+    throw new Error(`Prerender failed for ${page.path} (status ${res.status})`)
+  }
+
+  for (const needle of page.mustInclude) {
+    if (!html.includes(needle)) {
+      throw new Error(`Prerender HTML for ${page.path} missing “${needle}”`)
+    }
+  }
+  for (const needle of page.mustNotInclude) {
+    if (html.includes(needle)) {
+      throw new Error(`Prerender HTML for ${page.path} looks like the homepage (“${needle}”)`)
+    }
+  }
+
+  const outPath = join(clientDir, page.file)
+  mkdirSync(dirname(outPath), { recursive: true })
+  writeFileSync(outPath, html, 'utf8')
+  console.log('Wrote', outPath)
 }
 
-if (!html.includes('GlowUP')) {
-  console.error('Prerender HTML missing GlowUP brand — abort')
-  process.exit(2)
+for (const page of PAGES) {
+  await prerender(page)
 }
-
-mkdirSync(clientDir, { recursive: true })
-writeFileSync(indexPath, html, 'utf8')
-console.log('Wrote', indexPath)
