@@ -327,9 +327,9 @@ function PlatformPage() {
         <span className="agent-chip">{getAgent('company_lead_scout')?.name}</span>
         <h3>Company Lead Scout — sell GlowUP</h3>
         <p className="muted-copy">
-          Different list from salon-guest Lead Scout. Every hunt runs Google (Serper + ScrapingBee)
-          plus Apify on GlowUP IG/TikTok and salon-owner hashtags. {COMPANY_ICP_LINE} Public data only — no auto-DM,
-          no invented emails, occupancy, or budget.
+          Different list from salon-guest Lead Scout. Every hunt runs Google (Serper), Firecrawl on public
+          salon sites, ScrapingBee as fallback, Apify on GlowUP IG/TikTok, and Zernio for IG comments.{' '}
+          {COMPANY_ICP_LINE} Public data only — no auto-DM, no invented emails, occupancy, or budget.
         </p>
         <details className="icp-guide">
           <summary>Ideal salon we score for</summary>

@@ -1,7 +1,9 @@
 /**
- * ScrapingBee Google SERP for company hunt — public results only.
- * Used when Serper is thin or missing. No invented emails.
+ * ScrapingBee Google SERP + HTML fallback.
+ * Page HTML: Firecrawl first (see firecrawl-leads), then ScrapingBee.
+ * Public results only. No invented emails.
  */
+import { scrapeWithFirecrawl } from './firecrawl-leads'
 
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -36,12 +38,14 @@ export function hasScrapingBee(): boolean {
   return Boolean(getEnv('SCRAPINGBEE_API_KEY'))
 }
 
-/** Fetch public HTML. Empty string if no key or the page fails. */
+/** Fetch public HTML. Firecrawl first, ScrapingBee fallback. Empty if both fail. */
 export async function fetchPublicHtml(pageUrl: string): Promise<string> {
-  const key = getEnv('SCRAPINGBEE_API_KEY')
-  if (!key) return ''
   if (!/^https?:\/\//i.test(pageUrl)) return ''
   if (/google\.com\/search|maps\.google/i.test(pageUrl)) return ''
+  const fromFirecrawl = await scrapeWithFirecrawl(pageUrl).catch(() => '')
+  if (fromFirecrawl) return fromFirecrawl
+  const key = getEnv('SCRAPINGBEE_API_KEY')
+  if (!key) return ''
   const url = new URL('https://app.scrapingbee.com/api/v1/')
   url.searchParams.set('api_key', key)
   url.searchParams.set('url', pageUrl)

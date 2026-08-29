@@ -78,6 +78,6 @@ export async function huntLocalCompetitors(
     city,
     competitors: [],
     note: '',
-    error: 'Competitor hunt not deployed. Need Serper + ScrapingBee on the function.',
+    error: 'Competitor hunt not deployed. Need Serper plus FIRECRAWL_API_KEY or ScrapingBee.',
   }
 }

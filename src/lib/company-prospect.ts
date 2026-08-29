@@ -1,9 +1,10 @@
-/** Company Lead Scout: Google (Serper Places + web) + your IG commenters. No DuckDuckGo. */
+/** Company Lead Scout: Google (Serper) + Firecrawl web + ScrapingBee fallback + Apify/Zernio social. */
 
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { harvestApifySocial } from './apify-leads'
 import { icpBand, scoreCompanyIcp } from './company-icp'
+import { hasFirecrawl, huntWithFirecrawl, type FirecrawlHit } from './firecrawl-leads'
 import { hasScrapingBee, huntWithScrapingBee } from './scrapingbee-leads'
 
 export type ProspectSource = 'google_places' | 'google_web' | 'instagram_comment'
@@ -337,25 +338,30 @@ export async function runCompanyProspectSearch(city: string): Promise<ProspectSe
     }
   }
   const hasSerper = Boolean(serperApiKey())
-  if (!hasSerper && !hasScrapingBee()) {
+  if (!hasSerper && !hasScrapingBee() && !hasFirecrawl()) {
     return {
       city: trimmed,
       query: '',
       provider: 'none',
       items: [],
       socialItems: [],
-      error: 'Server cannot see SERPER_API_KEY or SCRAPINGBEE_API_KEY. Restart npm run dev after saving .env.',
+      error:
+        'Server cannot see SERPER_API_KEY, FIRECRAWL_API_KEY, or SCRAPINGBEE_API_KEY. Restart npm run dev after saving .env.',
     }
   }
 
   const query = `hair salon ${trimmed}`
   try {
-    const [places, web, bee, zernio, apify] = await Promise.all([
+    const [places, web, bee, fire, zernio, apify] = await Promise.all([
       hasSerper ? searchGooglePlaces(trimmed).catch(() => [] as DiscoveredSalon[]) : Promise.resolve([] as DiscoveredSalon[]),
       hasSerper ? searchGoogleWeb(trimmed).catch(() => [] as DiscoveredSalon[]) : Promise.resolve([] as DiscoveredSalon[]),
       huntWithScrapingBee(trimmed).catch(() => ({
         items: [] as DiscoveredSalon[],
         note: 'ScrapingBee hunt failed',
+      })),
+      huntWithFirecrawl(trimmed).catch(() => ({
+        items: [] as FirecrawlHit[],
+        note: 'Firecrawl hunt failed',
       })),
       harvestInstagramCommenters().catch(() => ({
         items: [] as DiscoveredSalon[],
@@ -371,15 +377,20 @@ export async function runCompanyProspectSearch(city: string): Promise<ProspectSe
         ),
       ]),
     ])
-    const items = mergeGoogle(places, web, bee.items.map((h) => rankDiscovery(h)))
+    const items = mergeGoogle(
+      places,
+      web,
+      bee.items.map((h) => rankDiscovery(h)),
+      fire.items.map((h) => rankDiscovery(h)),
+    )
     const socialItems = [...zernio.items, ...apify.items].sort((a, b) => b.points - a.points)
     return {
       city: trimmed,
       query,
-      provider: `google ${items.length} + apify/ig ${socialItems.length}`,
+      provider: `google ${items.length} + firecrawl/apify/ig ${socialItems.length}`,
       items,
       socialItems,
-      socialNote: [bee.note, apify.note, zernio.note].filter(Boolean).join(' '),
+      socialNote: [fire.note, bee.note, apify.note, zernio.note].filter(Boolean).join(' '),
     }
   } catch (e) {
     return {

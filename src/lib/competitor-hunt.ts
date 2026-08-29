@@ -9,6 +9,7 @@ import {
   type CompetitorFact,
   type CompetitorHuntResult,
 } from './competitor-scout'
+import { hasFirecrawl } from './firecrawl-leads'
 import { fetchPublicHtml, hasScrapingBee } from './scrapingbee-leads'
 
 function originOf(url: string): string {
@@ -22,7 +23,9 @@ function originOf(url: string): string {
 async function pricesFromSite(pageUrl: string): Promise<{ prices: string[]; note: string }> {
   const origin = originOf(pageUrl)
   if (!origin) return { prices: [], note: 'No website on Google.' }
-  if (!hasScrapingBee()) return { prices: [], note: 'No public prices pulled (ScrapingBee not set).' }
+  if (!hasFirecrawl() && !hasScrapingBee()) {
+    return { prices: [], note: 'No public prices pulled (set FIRECRAWL_API_KEY or SCRAPINGBEE_API_KEY).' }
+  }
 
   const collected: string[] = []
   const start = pageUrl.startsWith('http') ? pageUrl : `${origin}/`

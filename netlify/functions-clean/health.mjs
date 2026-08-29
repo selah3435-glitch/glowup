@@ -39,6 +39,9 @@ export async function handler(event) {
     hasStripe: Boolean(process.env.STRIPE_SECRET_KEY),
     hasSerper: Boolean(process.env.SERPER_API_KEY || process.env.SERPER_KEY),
     hasScrapingBee: Boolean(process.env.SCRAPINGBEE_API_KEY),
+    hasFirecrawl: Boolean(process.env.FIRECRAWL_API_KEY),
+    hasApify: Boolean(process.env.APIFY_API_TOKEN),
+    hasZernio: Boolean(process.env.ZERNIO_API_KEY),
     hasTwilio: Boolean(
       process.env.TWILIO_ACCOUNT_SID &&
         (process.env.TWILIO_FROM || process.env.TWILIO_PHONE_NUMBER) &&
