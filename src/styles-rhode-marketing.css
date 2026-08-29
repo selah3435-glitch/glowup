@@ -1815,6 +1815,7 @@
 .segment-note a { color: #a85a5c; }
 
 /* Comparison pages */
+.hero-answer,
 .compare-page .compare-answer {
   max-width: 40em;
 }

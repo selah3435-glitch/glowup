@@ -30,7 +30,7 @@ export const Route = createFileRoute('/')({
       {
         name: 'description',
         content:
-          'Centralize booking, client CRM, and Glo AI after-hours chat. GlowUP. scales from solo independent stylists to high-volume multi-location salons. Join the open beta.',
+          'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
       },
     ],
   }),
@@ -176,14 +176,14 @@ function Home() {
         <div className="rd-hero-copy">
           <p className="rd-kicker">For multi-stylist salon owners · Open beta Salon OS</p>
           <h1>
-            Stop losing
+            The salon operating system.
             <br />
-            <em>15–25% of inquiries.</em>
+            <em>Glo books the live floor book.</em>
           </h1>
-          <p className="rd-lede">
-            GlowUP. is the <strong>Salon Operating System</strong> for owners who run floors: live multi-stylist
-            calendar, Glo AI after-hours chat booking, CRM, and deposits. Capture more of the demand you already get —
-            modeled lifts toward <strong>40%+</strong> inquiry→book — without buying twice the leads.
+          <p className="rd-lede hero-answer">
+            GlowUP. is the salon operating system for owners who run floors. Glo, the native AI receptionist, books the
+            live multi-stylist calendar after hours. The same OS runs CRM, deposits, and growth as you add chairs — Solo
+            $39, Floor $149, Brand $299+/location. Open beta: chat Glo is live; phone voice is coming.
           </p>
           <div className="rd-cta-row">
             <a

@@ -16,26 +16,38 @@ const PAGES = [
   {
     path: '/',
     file: 'index.html',
-    mustInclude: ['GlowUP', 'What is GlowUP'],
+    mustInclude: ['GlowUP', 'What is GlowUP', 'hero-answer', 'native AI receptionist'],
     mustNotInclude: [],
+  },
+  {
+    path: '/for-floors',
+    file: 'for-floors/index.html',
+    mustInclude: ['One calendar spine', 'Every chair. Every branch.'],
+    mustNotInclude: ['rd-hero-product'],
+  },
+  {
+    path: '/for-solo',
+    file: 'for-solo/index.html',
+    mustInclude: ['when the floor grows', 'Independent stylists'],
+    mustNotInclude: ['rd-hero-product'],
   },
   {
     path: '/compare/vagaro',
     file: 'compare/vagaro/index.html',
     mustInclude: ['GlowUP. vs Vagaro', 'compare-answer'],
-    mustNotInclude: ['Stop losing'],
+    mustNotInclude: ['rd-hero-product'],
   },
   {
     path: '/compare/gloss-genius',
     file: 'compare/gloss-genius/index.html',
     mustInclude: ['GlowUP. vs Gloss Genius', 'compare-answer'],
-    mustNotInclude: ['Stop losing'],
+    mustNotInclude: ['rd-hero-product'],
   },
   {
     path: '/compare/fresha',
     file: 'compare/fresha/index.html',
     mustInclude: ['GlowUP. vs Fresha', 'compare-answer'],
-    mustNotInclude: ['Stop losing'],
+    mustNotInclude: ['rd-hero-product'],
   },
 ]
 
