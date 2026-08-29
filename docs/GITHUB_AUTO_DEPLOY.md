@@ -11,7 +11,7 @@
 4. Publish directory: `dist/client`.
 5. Confirm functions dir is `netlify/functions-clean`.
 
-`vite build` alone ships assets without a prerendered `index.html`, so Netlify serves its generic 404. The generate-html step writes the homepage into `dist/client` before publish.
+`vite build` alone ships assets without prerendered HTML, so Netlify serves its generic 404. The generate-html step writes `/`, `/for-floors`, `/for-solo`, and `/compare/{vagaro,gloss-genius,fresha}` into `dist/client` before publish. `npm run build` runs both steps.
 
 After that, every push to `main` deploys production.
 

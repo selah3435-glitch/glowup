@@ -37,6 +37,7 @@ function ForSoloPage() {
         <nav className="rd-nav-links" aria-label="Primary">
           <Link to="/">Home</Link>
           <Link to="/for-floors">Multi-stylist floors</Link>
+          <a href="/compare/vagaro">Compare</a>
           <a className="rd-nav-cta" href={TRIAL} onClick={() => trackEvent('join_beta_click', { plan: 'solo', location: 'for_solo_nav' })}>
             Start Solo pilot
           </a>

@@ -3,7 +3,7 @@ import { CallbackHandler } from '../components/CallbackHandler'
 import { CookieConsent } from '../components/CookieConsent'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { IdentityProvider } from '../lib/identity-context'
-import { GLOWUP_JSON_LD } from '../lib/glowup-schema'
+import { GLOWUP_ENTITY_JSON_LD } from '../lib/glowup-schema'
 
 import '../styles.css'
 
@@ -23,14 +23,14 @@ export const Route = createRootRoute({
       {
         name: 'description',
         content:
-          'Centralize booking, client CRM, and Glo AI after-hours chat. GlowUP. scales from solo independent stylists to high-volume multi-location salons. Join the open beta.',
+          'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
       },
       {
         name: 'theme-color',
         content: '#f7f4ef',
       },
       {
-        'script:ld+json': GLOWUP_JSON_LD,
+        'script:ld+json': GLOWUP_ENTITY_JSON_LD,
       },
     ],
     links: [

@@ -1,6 +1,7 @@
 /**
  * Public JSON-LD + homepage FAQ copy.
  * FAQ answers here are the only source for both the visible #faq section and FAQPage schema.
+ * Entity graph (org / site / app) may appear site-wide. FAQPage is homepage-only.
  */
 import { PRICING_PLANS, TRIAL_DAYS } from './pricing'
 
@@ -28,8 +29,8 @@ export const GLOWUP_FAQ: ReadonlyArray<{ q: string; a: string }> = [
     a: `Solo is ${solo.priceLabel}/month with ${chatsLabel(solo.aiConversationsIncluded)} Glo chats. Floor is ${floor.priceLabel}/month with ${chatsLabel(floor.aiConversationsIncluded)} Glo chats — the plan most salons start on. Brand is ${brand.priceLabel}+/location. ${TRIAL_DAYS}-day trial on Solo and Floor. AI is included in every paid plan; packaging is hybrid, not per-seat.`,
   },
   {
-    q: 'GlowUP. vs Vagaro / Gloss Genius?',
-    a: 'Vagaro and Gloss Genius are booking tools. GlowUP. is the salon OS: Glo is built in and books the live multi-stylist calendar, so you are not stacking a booker plus a separate AI receptionist ($49–200+/mo). Add chairs or a second location on the same spine — no forced re-platform.',
+    q: 'GlowUP. vs Vagaro / Gloss Genius / Fresha?',
+    a: 'Vagaro, Gloss Genius, and Fresha are booking tools (marketplace or POS-first). GlowUP. is the salon OS: Glo is built in and books the live multi-stylist calendar, so you are not stacking a booker plus a separate AI receptionist ($49–200+/mo). Add chairs or a second location on the same spine — no forced re-platform.',
   },
   {
     q: 'Does Glo book the live calendar?',
@@ -43,7 +44,14 @@ const appId = `${GLOWUP_SITE}/#software`
 const faqId = `${GLOWUP_SITE}/#faq`
 const logoUrl = `${GLOWUP_SITE}/brand/glowup-logo.jpg`
 
-export const GLOWUP_JSON_LD = {
+const offerBase = {
+  '@type': 'Offer' as const,
+  priceCurrency: 'USD',
+  url: `${GLOWUP_SITE}/#pricing`,
+}
+
+/** Organization + WebSite + SoftwareApplication. No FAQPage — that is homepage-only. */
+export const GLOWUP_ENTITY_JSON_LD = {
   '@context': 'https://schema.org',
   '@graph': [
     {
@@ -65,7 +73,7 @@ export const GLOWUP_JSON_LD = {
       url: `${GLOWUP_SITE}/`,
       name: 'GlowUP.',
       description:
-        'Centralize booking, client CRM, and Glo AI after-hours chat. GlowUP. scales from solo independent stylists to high-volume multi-location salons.',
+        'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
       inLanguage: 'en-US',
       publisher: { '@id': orgId },
     },
@@ -79,42 +87,44 @@ export const GLOWUP_JSON_LD = {
       url: `${GLOWUP_SITE}/`,
       image: logoUrl,
       description:
-        'Salon OS with Glo, the native AI receptionist that books the live multi-stylist calendar — plus CRM and deposits. Not a bolt-on phone bot.',
+        'Salon OS with Glo, the native AI receptionist that books the live multi-stylist calendar — plus CRM and deposits. Starting plans Solo, Floor, and Brand ($299+/location, custom). Not a bolt-on phone bot. Open beta.',
       brand: { '@id': orgId },
       offers: [
         {
-          '@type': 'Offer',
+          ...offerBase,
           name: solo.name,
           price: String(solo.priceMonthly),
-          priceCurrency: 'USD',
           description: `${solo.priceLabel}/month. ${chatsLabel(solo.aiConversationsIncluded)} Glo chats. ${TRIAL_DAYS}-day trial. ${solo.includes.join('; ')}.`,
-          url: `${GLOWUP_SITE}/#pricing`,
-          availability: 'https://schema.org/InStock',
         },
         {
-          '@type': 'Offer',
+          ...offerBase,
           name: floor.name,
           price: String(floor.priceMonthly),
-          priceCurrency: 'USD',
           description: `${floor.priceLabel}/month. ${chatsLabel(floor.aiConversationsIncluded)} Glo chats. ${TRIAL_DAYS}-day trial. ${floor.includes.join('; ')}.`,
-          url: `${GLOWUP_SITE}/#pricing`,
-          availability: 'https://schema.org/InStock',
+        },
+        {
+          ...offerBase,
+          name: brand.name,
+          price: String(brand.priceMonthly),
+          description: `From ${brand.priceLabel}/location/month or custom quote. ${chatsLabel(brand.aiConversationsIncluded)} Glo chats. ${brand.includes.join('; ')}.`,
         },
       ],
     },
-    {
-      '@type': 'FAQPage',
-      '@id': faqId,
-      url: `${GLOWUP_SITE}/#faq`,
-      isPartOf: { '@id': siteId },
-      mainEntity: GLOWUP_FAQ.map((item) => ({
-        '@type': 'Question',
-        name: item.q,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.a,
-        },
-      })),
-    },
   ],
+}
+
+export const GLOWUP_FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': faqId,
+  url: `${GLOWUP_SITE}/#faq`,
+  isPartOf: { '@id': siteId },
+  mainEntity: GLOWUP_FAQ.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
 }

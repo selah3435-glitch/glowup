@@ -20,7 +20,7 @@ import {
   setSelectedPlanId,
   type PlanId,
 } from '../lib/pricing'
-import { GLOWUP_FAQ } from '../lib/glowup-schema'
+import { GLOWUP_FAQ, GLOWUP_FAQ_JSON_LD } from '../lib/glowup-schema'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -31,6 +31,9 @@ export const Route = createFileRoute('/')({
         name: 'description',
         content:
           'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
+      },
+      {
+        'script:ld+json': GLOWUP_FAQ_JSON_LD,
       },
     ],
   }),
@@ -240,8 +243,9 @@ function Home() {
             <em>into booked clients.</em>
           </h2>
           <p>
-            Average salon booking rates sit at <strong>15–25%</strong>. Systems that reply instantly and keep
-            the conversation going routinely push conversion into the <strong>40%+</strong> range.
+            Industry-modeled ranges, not GlowUP. audited results: typical salon inquiry→book rates sit at{' '}
+            <strong>15–25%</strong>. Instant reply plus after-hours holds onto the live book is modeled toward{' '}
+            <strong>40%+</strong>.
           </p>
         </div>
 
@@ -278,10 +282,10 @@ function Home() {
             <em>searching for what you do.</em>
           </h2>
           <p>
-            Local search drives the majority of new salon bookings for many owners (often{' '}
-            <strong>70–80%</strong>). A stronger Google presence and clear service pages commonly increase new
-            client inquiries by around <strong>40%</strong>, while optimized profiles can deliver up to{' '}
-            <strong>5×</strong> more appointment requests than incomplete ones.
+            Industry-modeled local-search ranges (not GlowUP. audited): many owners see the majority of new
+            bookings start in local search (often <strong>70–80%</strong>). A stronger Google presence and clear
+            service pages commonly increase new client inquiries by around <strong>40%</strong>, while optimized
+            profiles can deliver up to <strong>5×</strong> more appointment requests than incomplete ones.
           </p>
         </div>
         <div className="rd-seo-stats">

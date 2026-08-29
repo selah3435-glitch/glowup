@@ -1,14 +1,28 @@
 # Deploy static + glo-chat function (avoids TanStack .netlify/v1 EISDIR).
 # Usage:
 #   npm run build
-#   node E:\GlowUP-build\generate-html.mjs
 #   powershell -File scripts\deploy-netlify-with-functions.ps1
+# npm run build already runs scripts/generate-html.mjs after vite.
 
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot\..
 
-if (-not (Test-Path "dist\client\index.html")) {
-  throw "Missing dist/client/index.html - run build + generate-html first"
+$required = @(
+  @{ Path = "dist\client\index.html"; Needle = "FAQPage" },
+  @{ Path = "dist\client\for-floors\index.html"; Needle = "One calendar spine" },
+  @{ Path = "dist\client\for-solo\index.html"; Needle = "when the floor grows" },
+  @{ Path = "dist\client\compare\vagaro\index.html"; Needle = "compare-answer" },
+  @{ Path = "dist\client\compare\gloss-genius\index.html"; Needle = "compare-answer" },
+  @{ Path = "dist\client\compare\fresha\index.html"; Needle = "compare-answer" }
+)
+foreach ($item in $required) {
+  if (-not (Test-Path $item.Path)) {
+    throw "Missing $($item.Path) — run npm run build (vite + scripts/generate-html.mjs) first"
+  }
+  $html = Get-Content $item.Path -Raw
+  if ($html -notlike "*$($item.Needle)*") {
+    throw "$($item.Path) is not prerendered marketing HTML (missing '$($item.Needle)')"
+  }
 }
 
 $src = (Resolve-Path "dist\client").Path

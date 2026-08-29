@@ -2,7 +2,9 @@
  * Public comparison facts for /compare/{slug}.
  * Competitor prices: published list only, plus “check their site”.
  * Do not invent occupancy, GlowUP. customer counts, or unpublished rates.
+ * GlowUP. plan prices come from PRICING_PLANS — do not hardcode.
  */
+import { PRICING_PLANS, TRIAL_DAYS } from './pricing'
 
 export const COMPARE_SLUGS = ['vagaro', 'gloss-genius', 'fresha'] as const
 export type CompareSlug = (typeof COMPARE_SLUGS)[number]
@@ -34,6 +36,13 @@ export type ComparePage = {
   faqs: CompareFaq[]
 }
 
+const solo = PRICING_PLANS.find((p) => p.id === 'solo')!
+const floor = PRICING_PLANS.find((p) => p.id === 'floor')!
+const brand = PRICING_PLANS.find((p) => p.id === 'brand')!
+
+const glowupPlans = `${solo.name} ${solo.priceLabel} / ${floor.name} ${floor.priceLabel} / ${brand.name} ${brand.priceLabel}+/location`
+const glowupPriceFaq = `GlowUP. is ${glowupPlans} with Glo included.`
+
 const GLOWUP = {
   calendar:
     'Native live multi-stylist calendar. Glo books real chairs on the floor book — not a sidecar widget.',
@@ -43,8 +52,7 @@ const GLOWUP = {
   deposits: 'Deposits path on paid plans to protect high-ticket services.',
   socialApproval:
     'Human-in-the-loop: Glow Concierge drafts; owners approve before anything is ready to post. Auto-post is not live.',
-  pricingModel:
-    'Solo $39 / Floor $149 / Brand $299+/location. Glo included. Not per-seat. 14-day trial on Solo & Floor. Open beta.',
+  pricingModel: `${glowupPlans}. Glo included. Not per-seat. ${TRIAL_DAYS}-day trial on Solo & Floor. Open beta.`,
 }
 
 export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
@@ -65,7 +73,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
     glowupWins: [
       'Glo books the live multi-stylist calendar as a native feature (chat live in beta; voice coming soon)',
       'Human-in-the-loop social drafts with owner approval — not auto-post',
-      'Continuous Solo → Floor → Brand OS ($39 / $149 / $299+/location), not per extra calendar as the growth story',
+      `Continuous Solo → Floor → Brand OS (${solo.priceLabel} / ${floor.priceLabel} / ${brand.priceLabel}+/location), not per extra calendar as the growth story`,
     ],
     theyWin: [
       'Consumer Vagaro Marketplace listing and social booking widgets (app, Instagram, Facebook, Apple Maps)',
@@ -107,7 +115,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
         id: 'pricingModel',
         label: 'Pricing model',
         glowup: GLOWUP.pricingModel,
-        them: 'Published US list: promo $23.99/mo to start, extra calendars billed separately, 7+ calendars listed at $83.99/mo. Add-ons extra. Check vagaro.com for current rates.',
+        them: 'Published US list: promo $23.99/mo to start; extra calendars $10/mo each, up to seven licenses. Add-ons extra. Check vagaro.com for current rates.',
       },
     ],
     faqs: [
@@ -125,7 +133,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
       },
       {
         q: 'How does GlowUP. pricing compare to Vagaro?',
-        a: 'GlowUP. is Solo $39, Floor $149, Brand $299+/location, with Glo included. Vagaro publishes a base subscription plus extra calendars and add-ons — check vagaro.com for current rates. We do not invent occupancy or GlowUP. customer counts.',
+        a: `${glowupPriceFaq} Vagaro publishes a base subscription plus extra calendars and add-ons — check vagaro.com for current rates. We do not invent occupancy or GlowUP. customer counts.`,
       },
       {
         q: 'Can I migrate from Vagaro?',
@@ -150,7 +158,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
     glowupWins: [
       'Glo chat is included and books the live multi-stylist calendar today (open beta)',
       'Human-in-the-loop social: drafts wait for owner approval; auto-post is not live',
-      'Same OS from Solo $39 to Floor $149 to Brand $299+/location — not a re-platform when you add chairs',
+      `Same OS from Solo ${solo.priceLabel} to Floor ${floor.priceLabel} to Brand ${brand.priceLabel}+/location — not a re-platform when you add chairs`,
     ],
     theyWin: [
       'Mature POS, card readers, Tap to Pay, and a published flat 2.6% processing rate',
@@ -214,7 +222,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
       },
       {
         q: 'What does GlowUP. cost versus Gloss Genius?',
-        a: 'GlowUP. is Solo $39, Floor $149, Brand $299+/location with Glo included. Gloss Genius publishes Standard, Gold, and Platinum — check glossgenius.com for current rates. We do not invent GlowUP. customer counts.',
+        a: `${glowupPriceFaq} Gloss Genius publishes Standard, Gold, and Platinum — check glossgenius.com for current rates. We do not invent GlowUP. customer counts.`,
       },
     ],
   },
@@ -295,7 +303,7 @@ export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {
       },
       {
         q: 'How does GlowUP. pricing compare to Fresha?',
-        a: 'GlowUP. is Solo $39, Floor $149, Brand $299+/location with Glo included. Fresha publishes Independent and Team subscriptions plus marketplace commission and add-ons — check fresha.com. We do not invent occupancy or GlowUP. customer counts.',
+        a: `${glowupPriceFaq} Fresha publishes Independent and Team subscriptions plus marketplace commission and add-ons — check fresha.com. We do not invent occupancy or GlowUP. customer counts.`,
       },
       {
         q: 'Can I migrate from Fresha?',

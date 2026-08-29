@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-html.mjs",
     "db:generate": "drizzle-kit generate",
     "glo:realtime": "node scripts/xai-realtime-glo.mjs",
     "glo:phone": "node scripts/glo-voice-phone-bridge.mjs",
