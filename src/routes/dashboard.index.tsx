@@ -28,6 +28,7 @@ import {
 } from '../lib/calendar-store'
 import { PRICING_PLANS, type PlanId } from '../lib/pricing'
 import { loadPilotSession } from '../lib/pilot-session'
+import { trackEvent } from '../lib/analytics'
 import { loadSalonContext } from '../lib/demo-salon'
 import { ensureDeskKey, ensureSalonSyncKey } from '../lib/ops-settings'
 import { computeProofMetrics } from '../lib/proof-metrics'
@@ -155,6 +156,15 @@ function DashboardOverview() {
           >
             <Copy size={13} /> Copy
           </button>
+          {deskUrl ? (
+            <a
+              className="button-dark button-small"
+              href={deskUrl}
+              onClick={() => trackEvent('open_glo_chat', { location: 'dashboard_home' })}
+            >
+              Open Glo desk
+            </a>
+          ) : null}
         </div>
         <ol style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.55, opacity: 0.9 }}>
           <li>Share that link — a guest books with Glo 24/7</li>

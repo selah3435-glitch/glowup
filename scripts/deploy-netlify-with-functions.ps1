@@ -13,7 +13,9 @@ $required = @(
   @{ Path = "dist\client\for-solo\index.html"; Needle = "when the floor grows" },
   @{ Path = "dist\client\compare\vagaro\index.html"; Needle = "compare-answer" },
   @{ Path = "dist\client\compare\gloss-genius\index.html"; Needle = "compare-answer" },
-  @{ Path = "dist\client\compare\fresha\index.html"; Needle = "compare-answer" }
+  @{ Path = "dist\client\compare\fresha\index.html"; Needle = "compare-answer" },
+  @{ Path = "dist\client\privacy\index.html"; Needle = "Privacy Policy" },
+  @{ Path = "dist\client\terms\index.html"; Needle = "Terms of Service" }
 )
 foreach ($item in $required) {
   if (-not (Test-Path $item.Path)) {

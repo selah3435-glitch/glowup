@@ -57,6 +57,18 @@ const PAGES = [
     mustInclude: ['GlowUP. vs Fresha', 'compare-answer', 'Who should pick GlowUP.', 'FAQPage'],
     mustNotInclude: ['rd-hero-product', 'What is GlowUP'],
   },
+  {
+    path: '/privacy',
+    file: 'privacy/index.html',
+    mustInclude: ['Privacy Policy', 'Information we collect'],
+    mustNotInclude: ['rd-hero-product'],
+  },
+  {
+    path: '/terms',
+    file: 'terms/index.html',
+    mustInclude: ['Terms of Service', 'GlowUP.'],
+    mustNotInclude: ['rd-hero-product'],
+  },
 ]
 
 if (!existsSync(serverPath)) {

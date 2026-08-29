@@ -18,6 +18,12 @@ function initialPlanFromUrl(): PlanId {
   if (typeof window === 'undefined') return 'floor'
   const p = new URLSearchParams(window.location.search).get('plan')
   if (p === 'solo' || p === 'floor' || p === 'brand') return p
+  try {
+    const stored = window.localStorage.getItem('glowup_selected_plan_v1')
+    if (stored === 'solo' || stored === 'floor' || stored === 'brand') return stored
+  } catch {
+    /* ignore */
+  }
   return 'floor'
 }
 

@@ -84,6 +84,23 @@ async function notify(payload) {
   }
 }
 
+async function emailFounder({ subject, text }) {
+  const to = (
+    process.env.FOUNDER_NOTIFY_EMAIL ||
+    process.env.RESEND_REPLY_TO ||
+    'aaron.jawsai@gmail.com'
+  )
+    .trim()
+    .toLowerCase()
+  if (!to.includes('@')) return
+  try {
+    const { sendResendEmail } = await import('./_lib/send-resend.mjs')
+    await sendResendEmail({ to, subject, text, replyTo: to })
+  } catch {
+    /* never fail request on alert */
+  }
+}
+
 function stageRank(s) {
   const order = ['signed_up', 'onboarding_started', 'onboarding_complete', 'active']
   const i = order.indexOf(s)
@@ -167,13 +184,43 @@ export async function handler(event) {
 
   await saveAll(items)
 
+  const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
+  const isGap = meta.source === 'gap_audit'
+
   if (stage === 'signed_up' && !prevStage) {
     await notify({
-      type: 'signup',
-      title: 'New GlowUP signup',
+      type: isGap ? 'gap_audit' : 'signup',
+      title: isGap ? 'GlowUP gap audit' : 'New GlowUP signup',
       email: row.email,
       name: row.name,
       stage: row.stage,
+      chairs: meta.chairs,
+      missedWeekly: meta.missedWeekly,
+    })
+    await emailFounder({
+      subject: isGap ? `Gap audit: ${row.email}` : `New signup: ${row.email}`,
+      text: [
+        isGap ? 'New gap audit on glowupbeautysolutions.com' : 'New signup on glowupbeautysolutions.com',
+        `Email: ${row.email}`,
+        row.name ? `Name: ${row.name}` : '',
+        meta.chairs ? `Chairs: ${meta.chairs}` : '',
+        meta.missedWeekly ? `Missed / after-hours per week (est.): ${meta.missedWeekly}` : '',
+        `Stage: ${row.stage}`,
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    })
+  } else if (isGap && prevStage) {
+    await emailFounder({
+      subject: `Gap audit: ${row.email}`,
+      text: [
+        'Gap audit (existing signup) on glowupbeautysolutions.com',
+        `Email: ${row.email}`,
+        meta.chairs ? `Chairs: ${meta.chairs}` : '',
+        meta.missedWeekly ? `Missed / after-hours per week (est.): ${meta.missedWeekly}` : '',
+      ]
+        .filter(Boolean)
+        .join('\n'),
     })
   } else if (stage === 'onboarding_complete' && prevStage !== 'onboarding_complete' && prevStage !== 'active') {
     await notify({
@@ -183,6 +230,17 @@ export async function handler(event) {
       name: row.name,
       stage: row.stage,
       salon: body.meta?.salonName,
+    })
+    await emailFounder({
+      subject: `Onboarding complete: ${row.email}`,
+      text: [
+        'Salon onboarding complete',
+        `Email: ${row.email}`,
+        row.name ? `Name: ${row.name}` : '',
+        body.meta?.salonName ? `Salon: ${body.meta.salonName}` : '',
+      ]
+        .filter(Boolean)
+        .join('\n'),
     })
   }
 

@@ -15,6 +15,18 @@ import { trackEvent } from '../lib/analytics'
 
 export const Route = createFileRoute('/login')({ component: LoginPage })
 
+function persistPlanFromUrl() {
+  if (typeof window === 'undefined') return
+  const p = new URLSearchParams(window.location.search).get('plan')
+  if (p === 'solo' || p === 'floor' || p === 'brand') {
+    try {
+      window.localStorage.setItem('glowup_selected_plan_v1', p)
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 function LoginPage() {
   const navigate = useNavigate()
   const { user, ready } = useIdentity()
@@ -30,6 +42,7 @@ function LoginPage() {
 
   const nextPath = useMemo(() => {
     if (typeof window === 'undefined') return postAuthPath()
+    persistPlanFromUrl()
     const n = new URLSearchParams(window.location.search).get('next')
     if (n && n.startsWith('/')) return n as '/onboarding' | '/dashboard'
     return postAuthPath()
@@ -37,6 +50,7 @@ function LoginPage() {
 
   // Already signed in → right place
   if (ready && user) {
+    persistPlanFromUrl()
     void navigate({ to: isOnboarded() ? '/dashboard' : '/onboarding' })
     return (
       <main className="auth-page">
