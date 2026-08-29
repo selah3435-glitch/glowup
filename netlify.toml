@@ -89,6 +89,26 @@
   force = true
 
 [[redirects]]
+  from = "/alternatives/vagaro"
+  to = "/compare/vagaro"
+  status = 301
+
+[[redirects]]
+  from = "/alternatives/gloss-genius"
+  to = "/compare/gloss-genius"
+  status = 301
+
+[[redirects]]
+  from = "/alternatives/glossgenius"
+  to = "/compare/gloss-genius"
+  status = 301
+
+[[redirects]]
+  from = "/alternatives/fresha"
+  to = "/compare/fresha"
+  status = 301
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

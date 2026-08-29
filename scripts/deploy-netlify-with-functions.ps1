@@ -25,6 +25,10 @@ $src = (Resolve-Path "dist\client").Path
 /api/agents/company-prospect  /.netlify/functions/company-prospect  200
 /api/agents/competitor-hunt  /.netlify/functions/competitor-hunt  200
 /api/onboarding  /.netlify/functions/onboarding  200
+/alternatives/vagaro  /compare/vagaro  301
+/alternatives/gloss-genius  /compare/gloss-genius  301
+/alternatives/glossgenius  /compare/gloss-genius  301
+/alternatives/fresha  /compare/fresha  301
 /*    /index.html   200
 "@ | Set-Content "$src\_redirects" -Encoding ASCII
 

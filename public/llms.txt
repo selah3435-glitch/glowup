@@ -32,9 +32,9 @@ GlowUP. is for salon owners (solo booth through multi-location floors), not for 
 - [For floors](https://glowupbeautysolutions.com/for-floors): multi-stylist / multi-location
 - [For solo](https://glowupbeautysolutions.com/for-solo): booth and independent
 - [Pricing](https://glowupbeautysolutions.com/pricing.md): machine-readable plans
-- [GlowUP. vs Vagaro](https://glowupbeautysolutions.com/compare/vagaro)
-- [GlowUP. vs Gloss Genius](https://glowupbeautysolutions.com/compare/gloss-genius)
-- [GlowUP. vs Fresha](https://glowupbeautysolutions.com/compare/fresha)
+- [GlowUP. vs Vagaro](https://glowupbeautysolutions.com/compare/vagaro) (also /alternatives/vagaro)
+- [GlowUP. vs Gloss Genius](https://glowupbeautysolutions.com/compare/gloss-genius) (also /alternatives/gloss-genius)
+- [GlowUP. vs Fresha](https://glowupbeautysolutions.com/compare/fresha) (also /alternatives/fresha)
 - [Privacy](https://glowupbeautysolutions.com/privacy)
 - [Terms](https://glowupbeautysolutions.com/terms)
 
