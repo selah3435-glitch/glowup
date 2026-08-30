@@ -40,6 +40,7 @@ export const Route = createFileRoute('/')({
 })
 
 const TRIAL_HREF = '/login?next=%2Fonboarding'
+const FLOOR_PILOT_HREF = '/login?next=%2Fonboarding&plan=floor'
 
 const HERO_BG = '/hero-salon.jpg'
 
@@ -144,11 +145,11 @@ function Home() {
     if (r.pilot || (r.fallback && !r.error)) {
       setCheckoutMsg(pilotCheckoutMessage(planId))
     } else if (r.error) {
-      setCheckoutMsg(`${r.error} — continuing free beta setup for ${planId}.`)
+      setCheckoutMsg(`${r.error} — continuing onboarding for ${planId}.`)
     } else {
-      setCheckoutMsg(`Plan ${planId} saved — continue free beta setup.`)
+      setCheckoutMsg(`Plan ${planId} saved — continue onboarding.`)
     }
-    // Brief beat so the friendly line is readable before free-setup redirect
+    // Brief beat so the line is readable before the onboarding redirect
     await new Promise((resolve) => setTimeout(resolve, 900))
     window.location.href = `${TRIAL_HREF}&plan=${planId}`
   }
@@ -165,8 +166,12 @@ function Home() {
           <a href="/for-floors">Floors</a>
           <a href="/for-solo">Solo</a>
           <a href="#pricing">Pricing</a>
-          <a className="rd-nav-cta" href={TRIAL_HREF} onClick={() => trackEvent('join_beta_click', { location: 'nav' })}>
-            Join the beta
+          <a
+            className="rd-nav-cta"
+            href={FLOOR_PILOT_HREF}
+            onClick={() => trackEvent('join_beta_click', { plan: 'floor', location: 'nav' })}
+          >
+            Start Floor pilot
           </a>
         </nav>
       </header>
@@ -177,7 +182,7 @@ function Home() {
           <div className="rd-hero-shade" />
         </div>
         <div className="rd-hero-copy">
-          <p className="rd-kicker">For multi-stylist salon owners · Open beta Salon OS</p>
+          <p className="rd-kicker">Five Floor pilots · Multi-stylist only</p>
           <h1>
             The salon operating system.
             <br />
@@ -185,27 +190,25 @@ function Home() {
           </h1>
           <p className="rd-lede hero-answer">
             GlowUP. is the salon operating system for owners who run floors. Glo, the native AI receptionist, books the
-            live multi-stylist calendar after hours. The same OS runs CRM, deposits, and growth as you add chairs — Solo
-            $39, Floor $149, Brand $299+/location. Open beta: chat Glo is live; phone voice is coming.
+            live multi-stylist calendar after hours. Chat is live; phone voice is coming. Five Floor pilots at $149 with
+            30 days on the house — native desk, live book, deposits. Product wordmark is GlowUP. The site is
+            glowupbeautysolutions.com.
           </p>
           <div className="rd-cta-row">
             <a
               className="rd-btn-primary"
-              href={`${TRIAL_HREF}&plan=floor`}
+              href={FLOOR_PILOT_HREF}
               onClick={() => trackEvent('join_beta_click', { plan: 'floor', location: 'hero' })}
             >
-              Start floor pilot <ChevronRight size={16} />
+              Start Floor pilot <ChevronRight size={16} />
             </a>
-            <button
-              type="button"
+            <a
               className="rd-btn-ghost"
-              onClick={() => {
-                trackEvent('see_dashboard_click', { location: 'hero' })
-                document.getElementById('hero-dashboard')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }}
+              href="#hero-dashboard"
+              onClick={() => trackEvent('see_dashboard_click', { location: 'hero' })}
             >
               See the owner dashboard
-            </button>
+            </a>
           </div>
         </div>
         <div className="rd-hero-product-pane">
@@ -214,22 +217,22 @@ function Home() {
       </section>
 
       <div className="rd-persona" id="persona">
-        <a className="rd-persona-card primary" href={`${TRIAL_HREF}&plan=floor`}>
+        <a className="rd-persona-card primary" href={FLOOR_PILOT_HREF}>
           <span className="rd-persona-tag">Primary buyer</span>
           <strong>I run a multi-stylist floor</strong>
-          <p>Live calendar, Glo after-hours, CRM, deposits — one OS as you add chairs or locations.</p>
-          <em>Floor / Brand pilot →</em>
+          <p>Native desk, live book, deposits — Glo after hours on the real multi-stylist calendar.</p>
+          <em>Start Floor pilot →</em>
         </a>
-        <a className="rd-persona-card" href={`${TRIAL_HREF}&plan=solo`}>
-          <span className="rd-persona-tag">Also supported</span>
-          <strong>I’m solo / booth</strong>
-          <p>Same continuous product — start Solo, grow into Floor without a forced re-platform.</p>
-          <em>Solo pilot →</em>
+        <a className="rd-persona-card" href="/for-solo">
+          <span className="rd-persona-tag">Not this launch</span>
+          <strong>Booth renters stay on Gloss Genius / Booksy</strong>
+          <p>This page is for multi-stylist floors. Solo / booth notes live on a quieter page.</p>
+          <em>For solo / booth →</em>
         </a>
       </div>
 
       <div className="rd-strip">
-        Open beta · Salon OS · Floor $149 · Brand $299+ · Solo $39 · Glo chat after hours · Voice coming soon
+        Five Floor pilots · Floor $149 · 30 days on the house · Glo chat after hours · Voice coming
       </div>
 
       <RoiCalculator />
@@ -325,8 +328,8 @@ function Home() {
           Figures are modeled ranges for planning, not audited guarantees. Open beta with real floors.
         </p>
         <div className="rd-cta-row" style={{ marginTop: 24 }}>
-          <a className="rd-btn-primary" href={`${TRIAL_HREF}&plan=floor`}>
-            Start floor pilot <ChevronRight size={16} />
+          <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+            Start Floor pilot <ChevronRight size={16} />
           </a>
           <a className="rd-btn-ghost" href="#roi">
             Run ROI calculator
@@ -336,37 +339,36 @@ function Home() {
 
       <section className="rd-migrate" id="migrate">
         <div className="rd-value-head">
-          <p className="rd-kicker">migration · switch without panic</p>
+          <p className="rd-kicker">migration · concierge</p>
           <h2>
-            Leave Booksy / GlossGenius / Mindbody-class tools
+            Switch cost is the opponent.
             <br />
-            <em>without losing the book.</em>
+            <em>Not their monthly fee.</em>
           </h2>
           <p>
-            The biggest friction for software buyers is data loss. In open beta we run a <strong>guided import</strong>{' '}
-            — export clients and history from your current system (CSV / spreadsheet), we map services and stylists
-            onto the GlowUP. multi-stylist calendar, and you keep running while the spine settles.
+            Migration is concierge: you export a CSV, we map it with you on Zoom, and Vagaro (or your current book)
+            stays live in parallel for 14 days. You do not cut over until the GlowUP. floor book is ready.
           </p>
         </div>
         <div className="rd-migrate-steps">
           <article>
             <strong>01</strong>
-            <h3>Export</h3>
-            <p>Clients, services, and open appointments from your current tool.</p>
+            <h3>CSV export</h3>
+            <p>Clients, services, and open appointments from Vagaro or your current book.</p>
           </article>
           <article>
             <strong>02</strong>
-            <h3>Map</h3>
-            <p>We align chairs, stylists, and formulas to the live GlowUP. book.</p>
+            <h3>You on Zoom</h3>
+            <p>We map chairs, stylists, and formulas onto the GlowUP. live book together.</p>
           </article>
           <article>
             <strong>03</strong>
-            <h3>Go live</h3>
-            <p>Glo chat + calendar online; you stop paying for a second stack when ready.</p>
+            <h3>14 days in parallel</h3>
+            <p>Vagaro stays live beside GlowUP. Cut over when the floor is ready.</p>
           </article>
         </div>
-        <a className="rd-btn-primary" href="#audit">
-          Request guided migration / gap audit <ChevronRight size={16} />
+        <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+          Start Floor pilot <ChevronRight size={16} />
         </a>
         <p className="rd-migrate-compare">
           Comparing stacks? GlowUP. vs{' '}
@@ -385,8 +387,8 @@ function Home() {
             <em>for the floor.</em>
           </h2>
           <p>
-            Not a bloated suite — client retention infrastructure: front desk AI, live multi-stylist calendar, CRM,
-            deposits. Continuous from booth to brand.
+            Native desk, live book, deposits. Glo chat books the multi-stylist calendar after hours. This pilot does
+            not include POS, payroll, or a marketplace. Phone voice is coming.
           </p>
         </div>
         <div className="rd-card-grid">
@@ -409,11 +411,11 @@ function Home() {
       <section className="rd-philosophy" id="product">
         <h2>one Salon OS for every chair</h2>
         <p>
-          GlowUP. is built for owners who scale — Glo on the desk, the live multi-stylist book, and CRM you run every
-          day. Start Solo if you must. Grow Floor and Brand without a forced re-platform.
+          GlowUP. is built for owners who run floors — native Glo desk, the live multi-stylist book, and deposits on
+          one OS. Five Floor pilots. $149 with 30 days on the house.
         </p>
-        <a className="rd-btn-primary" href={`${TRIAL_HREF}&plan=floor`}>
-          Open floor pilot <ChevronRight size={16} />
+        <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+          Start Floor pilot <ChevronRight size={16} />
         </a>
       </section>
 
@@ -446,16 +448,16 @@ function Home() {
           </p>
         </div>
         <div className="rd-cta-row">
+          <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+            Start Floor pilot <ChevronRight size={16} />
+          </a>
           <button
             type="button"
-            className="rd-btn-primary"
+            className="rd-btn-ghost"
             onClick={() => document.querySelector<HTMLButtonElement>('.ai-rec-fab')?.click()}
           >
-            Open Glo chat <ChevronRight size={16} />
+            Open Glo chat
           </button>
-          <a className="rd-btn-ghost" href={TRIAL_HREF}>
-            Join the beta
-          </a>
         </div>
       </section>
 
@@ -507,9 +509,9 @@ function Home() {
                 <small>No forced tool switch</small>
               </div>
               <div className="rd-proof">
-                <strong>$39+</strong>
-                <span>Transparent plans</span>
-                <small>AI included</small>
+                <strong>$149</strong>
+                <span>Floor pilots</span>
+                <small>30 days on the house</small>
               </div>
               <div className="rd-proof">
                 <strong>Live</strong>
@@ -531,7 +533,7 @@ function Home() {
             <br />
             <em>AI included.</em>
           </h2>
-          <p>Hybrid OS packaging for multi-stylist owners — not pure per-seat punishment. Solo available.</p>
+          <p>Floor is $149 with 30 days on the house. Five Floor pilots — multi-stylist only.</p>
         </div>
         <div className="rd-price-grid">
           {PRICING_PLANS.map((plan) => (
@@ -617,12 +619,12 @@ function Home() {
       <section className="rd-final" id="contact">
         <h2>Ready for GlowUP.?</h2>
         <p>
-          Beauty Business, Beautifully Done. Join the open beta, open Glo chat, and put after-hours bookings on your
-          live calendar.
+          Five Floor pilots. $149 with 30 days on the house. Native desk, live book, deposits. Chat Glo is live; phone
+          voice is coming.
         </p>
         <div className="rd-cta-row">
-          <a className="rd-btn-primary" href={TRIAL_HREF}>
-            Join the beta · free setup <ChevronRight size={16} />
+          <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+            Start Floor pilot <ChevronRight size={16} />
           </a>
           <a className="rd-btn-ghost" href="#pricing">
             Compare plans
@@ -643,10 +645,10 @@ function Home() {
           <a href="/compare/fresha">vs Fresha</a>
           <a href="#audit">Gap audit</a>
           <a
-            href={TRIAL_HREF}
-            onClick={() => trackEvent('join_beta_click', { location: 'footer' })}
+            href={FLOOR_PILOT_HREF}
+            onClick={() => trackEvent('join_beta_click', { plan: 'floor', location: 'footer' })}
           >
-            Join the beta
+            Start Floor pilot
           </a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>

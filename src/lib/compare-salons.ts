@@ -4,7 +4,7 @@
  * Do not invent occupancy, GlowUP. customer counts, or unpublished rates.
  * GlowUP. plan prices come from PRICING_PLANS — do not hardcode.
  */
-import { PRICING_PLANS, TRIAL_DAYS } from './pricing'
+import { FLOOR_PILOT_DAYS, PRICING_PLANS, TRIAL_DAYS } from './pricing'
 
 export const COMPARE_SLUGS = ['vagaro', 'gloss-genius', 'fresha'] as const
 export type CompareSlug = (typeof COMPARE_SLUGS)[number]
@@ -52,7 +52,7 @@ const GLOWUP = {
   deposits: 'Deposits path on paid plans to protect high-ticket services.',
   socialApproval:
     'Human-in-the-loop: Glow Concierge drafts; owners approve before anything is ready to post. Auto-post is not live.',
-  pricingModel: `${glowupPlans}. Glo included. Not per-seat. ${TRIAL_DAYS}-day trial on Solo & Floor. Open beta.`,
+  pricingModel: `${glowupPlans}. Glo included. Not per-seat. Floor: ${FLOOR_PILOT_DAYS} days on the house, then ${floor.priceLabel}/mo. Solo: ${TRIAL_DAYS}-day trial. Open beta.`,
 }
 
 export const COMPARE_PAGES: Record<CompareSlug, ComparePage> = {

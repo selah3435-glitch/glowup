@@ -1,7 +1,7 @@
 /**
  * POST /api/billing/checkout
  * { plan: 'solo'|'floor', email?, successUrl?, cancelUrl? }
- * Creates Stripe Checkout Session (subscription + 14-day trial).
+ * Creates Stripe Checkout Session (subscription + trial: 30 days Floor, 14 days Solo).
  * Brand plan is not checkout — contact sales.
  */
 
@@ -80,7 +80,8 @@ export async function handler(event) {
   params.set('client_reference_id', String(body.email || plan).slice(0, 200))
   params.set('metadata[plan]', plan)
   params.set('metadata[product]', 'glowup')
-  params.set('subscription_data[trial_period_days]', '14')
+  const trialDays = plan === 'floor' ? 30 : 14
+  params.set('subscription_data[trial_period_days]', String(trialDays))
   params.set('subscription_data[metadata][plan]', plan)
   params.set('line_items[0][quantity]', '1')
   params.set('line_items[0][price_data][currency]', 'usd')
@@ -116,7 +117,7 @@ export async function handler(event) {
       url: data.url,
       sessionId: data.id,
       plan,
-      trialDays: 14,
+      trialDays,
     })
   } catch (e) {
     return json(200, {

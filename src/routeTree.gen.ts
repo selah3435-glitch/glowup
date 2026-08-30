@@ -25,8 +25,8 @@ import { Route as DashboardLeadsRouteImport } from './routes/dashboard.leads'
 import { Route as DashboardConciergeRouteImport } from './routes/dashboard.concierge'
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as DashboardCalendarRouteImport } from './routes/dashboard.calendar'
-import { Route as BookSalonKeyRouteImport } from './routes/book.$salonKey'
 import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
+import { Route as BookSalonKeyRouteImport } from './routes/book.$salonKey'
 import { Route as DashboardSocialIndexRouteImport } from './routes/dashboard.social.index'
 import { Route as DashboardSocialStudioRouteImport } from './routes/dashboard.social.studio'
 import { Route as DashboardSocialScheduleRouteImport } from './routes/dashboard.social.schedule'
@@ -113,14 +113,14 @@ const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => DashboardRoute,
 } as any)
-const BookSalonKeyRoute = BookSalonKeyRouteImport.update({
-  id: '/book/$salonKey',
-  path: '/book/$salonKey',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CompareSlugRoute = CompareSlugRouteImport.update({
   id: '/compare/$slug',
   path: '/compare/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookSalonKeyRoute = BookSalonKeyRouteImport.update({
+  id: '/book/$salonKey',
+  path: '/book/$salonKey',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardSocialIndexRoute = DashboardSocialIndexRouteImport.update({
@@ -427,18 +427,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCalendarRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/book/$salonKey': {
-      id: '/book/$salonKey'
-      path: '/book/$salonKey'
-      fullPath: '/book/$salonKey'
-      preLoaderRoute: typeof BookSalonKeyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/compare/$slug': {
       id: '/compare/$slug'
       path: '/compare/$slug'
       fullPath: '/compare/$slug'
       preLoaderRoute: typeof CompareSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book/$salonKey': {
+      id: '/book/$salonKey'
+      path: '/book/$salonKey'
+      fullPath: '/book/$salonKey'
+      preLoaderRoute: typeof BookSalonKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/social/': {

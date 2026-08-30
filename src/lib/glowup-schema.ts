@@ -3,7 +3,7 @@
  * FAQ answers here are the only source for both the visible #faq section and FAQPage schema.
  * Entity graph (org / site / app) may appear site-wide. FAQPage is homepage-only.
  */
-import { PRICING_PLANS, TRIAL_DAYS } from './pricing'
+import { FLOOR_PILOT_DAYS, PRICING_PLANS, TRIAL_DAYS } from './pricing'
 
 export const GLOWUP_SITE = 'https://glowupbeautysolutions.com'
 
@@ -26,7 +26,7 @@ export const GLOWUP_FAQ: ReadonlyArray<{ q: string; a: string }> = [
   },
   {
     q: 'How much does GlowUP. cost?',
-    a: `Solo is ${solo.priceLabel}/month with ${chatsLabel(solo.aiConversationsIncluded)} Glo chats. Floor is ${floor.priceLabel}/month with ${chatsLabel(floor.aiConversationsIncluded)} Glo chats — the plan most salons start on. Brand is ${brand.priceLabel}+/location. ${TRIAL_DAYS}-day trial on Solo and Floor. AI is included in every paid plan; packaging is hybrid, not per-seat.`,
+    a: `Floor is the plan most floors start on: ${floor.priceLabel}/mo, ${FLOOR_PILOT_DAYS} days on the house, then the card — ${chatsLabel(floor.aiConversationsIncluded)} Glo chats. Solo is ${solo.priceLabel}/mo with a ${TRIAL_DAYS}-day trial and ${chatsLabel(solo.aiConversationsIncluded)} Glo chats. Brand is ${brand.priceLabel}+/location. AI is included in every paid plan; packaging is hybrid, not per-seat.`,
   },
   {
     q: 'GlowUP. vs Vagaro / Gloss Genius / Fresha?',
@@ -100,7 +100,7 @@ export const GLOWUP_ENTITY_JSON_LD = {
           ...offerBase,
           name: floor.name,
           price: String(floor.priceMonthly),
-          description: `${floor.priceLabel}/month. ${chatsLabel(floor.aiConversationsIncluded)} Glo chats. ${TRIAL_DAYS}-day trial. ${floor.includes.join('; ')}.`,
+          description: `${floor.priceLabel}/month. ${chatsLabel(floor.aiConversationsIncluded)} Glo chats. ${FLOOR_PILOT_DAYS} days on the house, then the card. ${floor.includes.join('; ')}.`,
         },
         {
           ...offerBase,

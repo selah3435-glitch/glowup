@@ -2587,24 +2587,26 @@ a.agent-card-link em {
 .legal-body li { margin-bottom: 8px; }
 .legal-body a { color: #a85a5c; }
 
-/* Cookie banner */
+/* Cookie banner — top-right under nav so left hero CTAs stay tappable */
 .cookie-banner {
   position: fixed;
-  z-index: 100;
-  left: 16px;
+  z-index: 60;
+  top: 72px;
   right: 16px;
-  bottom: 16px;
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 18px 18px 16px;
+  left: auto;
+  bottom: auto;
+  max-width: 340px;
+  margin: 0;
+  padding: 14px 16px 12px;
   background: #fffcf8;
   border: 1px solid rgba(26, 26, 26, 0.12);
   border-radius: 16px;
   box-shadow: 0 16px 48px rgba(26, 26, 26, 0.16);
   color: #1a1a1a;
+  pointer-events: auto;
 }
 .cookie-banner p {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   font-size: 13px;
   line-height: 1.5;
   color: #3d3834;
@@ -2615,6 +2617,40 @@ a.agent-card-link em {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+}
+@media (max-width: 720px) {
+  .cookie-banner {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    max-width: none;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    box-shadow: 0 8px 20px rgba(26, 26, 26, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+  }
+  .cookie-banner p {
+    margin: 0;
+    flex: 1 1 180px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .cookie-banner-actions {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  .cookie-banner .cookie-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
 }
 .cookie-btn {
   border-radius: 999px;

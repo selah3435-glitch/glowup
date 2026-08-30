@@ -28,6 +28,7 @@ export type PricingPlan = {
 
 export const BRAND_CONTACT_EMAIL = 'aaron.jawsai@gmail.com'
 export const TRIAL_DAYS = 14
+export const FLOOR_PILOT_DAYS = 30
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
@@ -64,7 +65,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     aiAllowance: '1,000 Glo AI conversations / mo included',
     aiConversationsIncluded: 1000,
     highlighted: true,
-    cta: 'Start Floor · 14-day trial',
+    cta: 'Start Floor pilot · 30 days on the house',
     checkoutEnabled: true,
     includes: [
       'Multi-stylist live calendar spine',
@@ -106,7 +107,8 @@ export const AI_OVERAGE_NOTE =
 export const PRICING_COMPARE =
   'One platform vs booking software + a separate AI receptionist ($49–200+/mo). Glo is native and books the live multi-chair calendar.'
 
-export const ANNUAL_DISCOUNT = '14-day free trial on Solo & Floor via Stripe Checkout. Annual discount available on request.'
+export const ANNUAL_DISCOUNT =
+  'Floor: 30 days on the house, then $149/mo. Solo: 14-day trial. Not free forever. Annual discount available on request.'
 
 export function getPlan(id: PlanId): PricingPlan {
   return PRICING_PLANS.find((p) => p.id === id) || PRICING_PLANS[1]

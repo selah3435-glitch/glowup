@@ -26,8 +26,8 @@ export function CookieConsent() {
   return (
     <div className="cookie-banner" role="dialog" aria-label="Cookie consent">
       <p>
-        We use cookies for analytics (Google Analytics / Meta Pixel) to understand product interest and improve
-        GlowUP. Essential site functions work without them.{' '}
+        Analytics cookies (Google Analytics / Meta Pixel) are optional. They help us understand product interest
+        and improve GlowUP. Essential site functions work without them.{' '}
         <a href="/privacy">Privacy Policy</a>
       </p>
       <div className="cookie-banner-actions">

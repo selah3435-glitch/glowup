@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react'
 import { trackEvent } from '../lib/analytics'
 import { trackPlatformEvent } from '../lib/platform-client'
 
-const TRIAL_HREF = '/login?next=%2Fonboarding'
+const FLOOR_PILOT_HREF = '/login?next=%2Fonboarding&plan=floor'
 
 /** Micro-conversion: 5-minute salon gap audit lead capture */
 
@@ -61,11 +61,11 @@ export function GapAuditForm() {
         {status === 'ok' ? (
           <div className="rd-audit-done">
             <p>
-              <strong>Got it.</strong> You’re on the pilot list for a gap audit. Open free setup now so the calendar
-              spine is ready when we follow up.
+              <strong>Got it.</strong> You’re on the list for a gap audit. Start a Floor pilot so the live book is
+              ready when we follow up.
             </p>
-            <a className="rd-btn-primary" href={TRIAL_HREF}>
-              Join the beta · free setup <ChevronRight size={16} />
+            <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
+              Start Floor pilot <ChevronRight size={16} />
             </a>
           </div>
         ) : (
