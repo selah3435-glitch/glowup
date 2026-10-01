@@ -40,4 +40,11 @@ Netlify Database stores structured salon setup data through Drizzle ORM. The sch
 
 The dashboard contains realistic seeded display data so the product value is visible before a salon has appointments. The authenticated salon name is loaded from Netlify Database when available. Local preview navigation remains usable because Netlify Identity requires a deployed Netlify environment for real sessions.
 
-After changing `db/schema.ts`, generate a named migration with `pnpm db:generate -- --name <imperative_snake_case_name>`. After changing Identity integration, ensure the Netlify Identity enable script from the installed skill has been run.
+After changing `db/schema.ts`, generate a named migration with `npm run db:generate -- --name <imperative_snake_case_name>`. After changing Identity integration, ensure the Netlify Identity enable script from the installed skill has been run.
+
+## Cursor Cloud specific instructions
+
+- Install from the repository root with `npm ci`. Dependencies are locked in `package-lock.json`. There is no `pnpm-lock.yaml`.
+- The app dev server is `npm run dev -- --host 0.0.0.0 --port 3000` (`http://localhost:3000`). `netlify.toml` sets Node 22. Netlify Identity cannot finish a real session on localhost. Use **Skip login — explore setup** (`/onboarding?demo=1`), complete the three setup steps, and confirm `/dashboard` shows the studio name. That path stores salon setup in browser local storage.
+- `npm run build` is the production check. Unit tests: `npx tsx --test src/lib/proof-metrics.test.ts src/lib/competitor-scout.test.ts` (plain `node --test` cannot resolve the extensionless imports in `proof-metrics.ts`). `npx tsc --noEmit` currently reports an unused `ensureSalonSyncKey` import in `src/routes/dashboard.index.tsx`.
+- Keys in `.env.example` are for billing, SMS, email, and agent features. The marketing site, onboarding preview, and seeded dashboard run without them.
