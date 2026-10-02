@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForSoloRouteImport } from './routes/for-solo'
 import { Route as ForFloorsRouteImport } from './routes/for-floors'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AiReceptionistRouteImport } from './routes/ai-receptionist'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSocialRouteImport } from './routes/dashboard.social'
@@ -66,6 +67,11 @@ const ForFloorsRoute = ForFloorsRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiReceptionistRoute = AiReceptionistRouteImport.update({
+  id: '/ai-receptionist',
+  path: '/ai-receptionist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -152,6 +158,7 @@ const DashboardSocialBrandRoute = DashboardSocialBrandRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-receptionist': typeof AiReceptionistRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/for-floors': typeof ForFloorsRoute
   '/for-solo': typeof ForSoloRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-receptionist': typeof AiReceptionistRoute
   '/for-floors': typeof ForFloorsRoute
   '/for-solo': typeof ForSoloRoute
   '/login': typeof LoginRoute
@@ -201,6 +209,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-receptionist': typeof AiReceptionistRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/for-floors': typeof ForFloorsRoute
   '/for-solo': typeof ForSoloRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-receptionist'
     | '/dashboard'
     | '/for-floors'
     | '/for-solo'
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-receptionist'
     | '/for-floors'
     | '/for-solo'
     | '/login'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ai-receptionist'
     | '/dashboard'
     | '/for-floors'
     | '/for-solo'
@@ -302,6 +314,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiReceptionistRoute: typeof AiReceptionistRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   ForFloorsRoute: typeof ForFloorsRoute
   ForSoloRoute: typeof ForSoloRoute
@@ -362,6 +375,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-receptionist': {
+      id: '/ai-receptionist'
+      path: '/ai-receptionist'
+      fullPath: '/ai-receptionist'
+      preLoaderRoute: typeof AiReceptionistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -527,6 +547,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiReceptionistRoute: AiReceptionistRoute,
   DashboardRoute: DashboardRouteWithChildren,
   ForFloorsRoute: ForFloorsRoute,
   ForSoloRoute: ForSoloRoute,

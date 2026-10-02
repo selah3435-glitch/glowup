@@ -20,27 +20,36 @@ import {
   setSelectedPlanId,
   type PlanId,
 } from '../lib/pricing'
-import { GLOWUP_FAQ, GLOWUP_FAQ_JSON_LD } from '../lib/glowup-schema'
+import { GLOWUP_FAQ, GLOWUP_FAQ_JSON_LD, GLOWUP_SITE } from '../lib/glowup-schema'
+import { breadcrumbJsonLd, FLOOR_PILOT_HREF, marketingHead } from '../lib/marketing-meta'
 
 export const Route = createFileRoute('/')({
   component: Home,
-  head: () => ({
-    meta: [
-      { title: 'GlowUP. | The AI-Powered Salon Operating System (OS)' },
-      {
-        name: 'description',
-        content:
-          'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
-      },
-      {
-        'script:ld+json': GLOWUP_FAQ_JSON_LD,
-      },
-    ],
-  }),
+  head: () =>
+    marketingHead({
+      title: 'AI Receptionist for Salons | GlowUP.',
+      description:
+        'GlowUP. is salon software for multi-stylist floors. Glo, the AI receptionist, books the live calendar after hours. Floor pilot $149, 30 days on the house. Open beta.',
+      path: '/',
+      jsonLd: [
+        GLOWUP_FAQ_JSON_LD,
+        breadcrumbJsonLd([{ name: 'GlowUP.', path: '/' }]),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          '@id': `${GLOWUP_SITE}/#webpage`,
+          url: `${GLOWUP_SITE}/`,
+          name: 'AI Receptionist for Salons | GlowUP.',
+          description:
+            'Salon software for multi-stylist floors. Glo books the live calendar after hours. Floor pilot $149 with 30 days on the house.',
+          isPartOf: { '@id': `${GLOWUP_SITE}/#website` },
+          about: { '@id': `${GLOWUP_SITE}/#software` },
+        },
+      ],
+    }),
 })
 
 const TRIAL_HREF = '/login?next=%2Fonboarding'
-const FLOOR_PILOT_HREF = '/login?next=%2Fonboarding&plan=floor'
 
 const HERO_BG = '/hero-salon.jpg'
 
@@ -162,10 +171,10 @@ function Home() {
           <span className="rd-beta-chip">Open beta</span>
         </div>
         <nav className="rd-nav-links" aria-label="Primary">
-          <a href="#roi">ROI</a>
+          <a href="/ai-receptionist">Glo</a>
           <a href="/for-floors">Floors</a>
-          <a href="/for-solo">Solo</a>
           <a href="#pricing">Pricing</a>
+          <a href="#migrate">Switch</a>
           <a
             className="rd-nav-cta"
             href={FLOOR_PILOT_HREF}
@@ -189,10 +198,9 @@ function Home() {
             <em>Glo books the live floor book.</em>
           </h1>
           <p className="rd-lede hero-answer">
-            GlowUP. is the salon operating system for owners who run floors. Glo, the native AI receptionist, books the
-            live multi-stylist calendar after hours. Chat is live; phone voice is coming. Five Floor pilots at $149 with
-            30 days on the house — native desk, live book, deposits. Product wordmark is GlowUP. The site is
-            glowupbeautysolutions.com.
+            GlowUP. is salon software for owners who run floors. Glo, the AI receptionist, books the live multi-stylist
+            calendar after hours. Chat is live; phone voice is coming. Five Floor pilots at $149 with 30 days on the
+            house — native desk, live book, deposits.
           </p>
           <div className="rd-cta-row">
             <a
@@ -223,11 +231,11 @@ function Home() {
           <p>Native desk, live book, deposits — Glo after hours on the real multi-stylist calendar.</p>
           <em>Start Floor pilot →</em>
         </a>
-        <a className="rd-persona-card" href="/for-solo">
-          <span className="rd-persona-tag">Not this launch</span>
-          <strong>Booth renters stay on Gloss Genius / Booksy</strong>
-          <p>This page is for multi-stylist floors. Solo / booth notes live on a quieter page.</p>
-          <em>For solo / booth →</em>
+        <a className="rd-persona-card" href="#migrate">
+          <span className="rd-persona-tag">Already on a book</span>
+          <strong>Keep Vagaro live for 14 days</strong>
+          <p>CSV export, a Zoom to map chairs, and the current book stays up until the floor is ready.</p>
+          <em>See the switch →</em>
         </a>
       </div>
 
@@ -239,102 +247,74 @@ function Home() {
 
       <section className="rd-value" id="value">
         <div className="rd-value-head">
-          <p className="rd-kicker">conversion + revenue</p>
+          <p className="rd-kicker">after hours</p>
           <h2>
-            Turn more of the interest you’re already getting
+            Empty chairs after 7pm
             <br />
-            <em>into booked clients.</em>
+            <em>are the leak.</em>
           </h2>
           <p>
-            Industry-modeled ranges, not GlowUP. audited results: typical salon inquiry→book rates sit at{' '}
-            <strong>15–25%</strong>. Instant reply plus after-hours holds onto the live book is modeled toward{' '}
-            <strong>40%+</strong>.
-          </p>
-        </div>
-
-        <div className="rd-math">
-          <p className="rd-math-label">Example</p>
-          <div className="rd-math-grid">
-            <div className="rd-math-card">
-              <span>150 inquiries / month</span>
-              <strong>20% conversion</strong>
-              <em>30 appointments</em>
-            </div>
-            <div className="rd-math-arrow" aria-hidden>
-              →
-            </div>
-            <div className="rd-math-card featured">
-              <span>Same 150 inquiries</span>
-              <strong>40% conversion</strong>
-              <em>60 appointments · +30 clients</em>
-            </div>
-          </div>
-          <p className="rd-math-result">
-            At an <strong>$85</strong> average ticket, that’s <strong>$2,550 more per month</strong> (
-            <strong>$30,600 a year</strong>) from the leads you’re already receiving.
-          </p>
-        </div>
-      </section>
-
-      <section className="rd-value rd-value-alt" id="seo">
-        <div className="rd-value-head">
-          <p className="rd-kicker">SEO · visibility</p>
-          <h2>
-            Get found by the clients already
-            <br />
-            <em>searching for what you do.</em>
-          </h2>
-          <p>
-            Industry-modeled local-search ranges (not GlowUP. audited): many owners see the majority of new
-            bookings start in local search (often <strong>70–80%</strong>). A stronger Google presence and clear
-            service pages commonly increase new client inquiries by around <strong>40%</strong>, while optimized
-            profiles can deliver up to <strong>5×</strong> more appointment requests than incomplete ones.
+            The phone is down while color processes. DMs sit until morning. Glo chat answers and holds the chair on
+            the live multi-stylist book. Deposits sit on that same appointment. The calculator above uses your ticket
+            and your missed inquiries — a model you set, not an audited GlowUP. result.
           </p>
         </div>
         <div className="rd-seo-stats">
           <div className="rd-seo-stat">
-            <strong>70–80%</strong>
-            <span>of new bookings often start in local search</span>
+            <strong>After 7</strong>
+            <span>Glo chat covers the hours the desk is closed</span>
           </div>
           <div className="rd-seo-stat">
-            <strong>~40%</strong>
-            <span>more inquiries with stronger presence &amp; service pages</span>
+            <strong>One book</strong>
+            <span>Holds land on the live multi-stylist calendar</span>
           </div>
           <div className="rd-seo-stat">
-            <strong>up to 5×</strong>
-            <span>more requests vs incomplete profiles</span>
+            <strong>$149</strong>
+            <span>Floor pilot, 30 days on the house, Glo included</span>
           </div>
         </div>
-      </section>
-
-      <section className="rd-impact" id="impact">
-        <p className="rd-kicker">modeled outcomes · pilot language</p>
-        <h2>Harder numbers. Owner language.</h2>
-        <ul className="rd-impact-list">
-          <li>
-            Industry-modeled inquiry→book rates: lift typical <strong>15–25%</strong> toward{' '}
-            <strong>40%+</strong> when response is instant and after-hours demand lands on the live book.
-          </li>
-          <li>
-            Same lead volume, more chairs filled — modeled example: +30 appointments/mo at $85 ticket ≈{' '}
-            <strong>$2,550/mo</strong> without buying twice the traffic.
-          </li>
-          <li>
-            <strong>Result:</strong> fuller floors and client retention infrastructure owners can run day to day —
-            Glo chat beta now; phone voice coming soon.
-          </li>
-        </ul>
-        <p className="rd-pain-foot">
-          Figures are modeled ranges for planning, not audited guarantees. Open beta with real floors.
-        </p>
-        <div className="rd-cta-row" style={{ marginTop: 24 }}>
+        <div className="rd-cta-row" style={{ marginTop: 28 }}>
           <a className="rd-btn-primary" href={FLOOR_PILOT_HREF}>
             Start Floor pilot <ChevronRight size={16} />
           </a>
-          <a className="rd-btn-ghost" href="#roi">
-            Run ROI calculator
+          <a className="rd-btn-ghost" href="/ai-receptionist">
+            AI receptionist for salons
           </a>
         </div>
+      </section>
+
+      <section className="rd-value rd-value-alt" id="compare">
+        <div className="rd-value-head">
+          <p className="rd-kicker">salon software · compared</p>
+          <h2>
+            Booking tool plus a bot
+            <br />
+            <em>is two products.</em>
+          </h2>
+          <p>
+            Owners search salon booking software, salon CRM, and an AI receptionist for salons. GlowUP. is one OS:
+            Glo included, the live floor book, and deposits. Not a consumer marketplace. Not POS. Not payroll.
+          </p>
+        </div>
+        <div className="rd-seo-stats">
+          <a className="rd-seo-stat" href="/compare/vagaro">
+            <strong>Vagaro</strong>
+            <span>Native desk vs marketplace plus a receptionist add-on</span>
+          </a>
+          <a className="rd-seo-stat" href="/compare/fresha">
+            <strong>Fresha</strong>
+            <span>Included Glo vs a paid concierge on a marketplace</span>
+          </a>
+          <a className="rd-seo-stat" href="/compare/mangomint">
+            <strong>Mangomint</strong>
+            <span>After-hours book vs a scheduling suite you already trust</span>
+          </a>
+        </div>
+        <p className="rd-migrate-compare">
+          Also{' '}
+          <a href="/compare/gloss-genius">Gloss Genius</a>, <a href="/compare/booksy">Booksy</a>, and{' '}
+          <a href="/compare/boulevard">Boulevard</a>.
+        </p>
       </section>
 
       <section className="rd-migrate" id="migrate">
@@ -635,6 +615,7 @@ function Home() {
       <footer className="rd-footer">
         <BrandLogo href="/" showSlogan />
         <nav className="rd-footer-nav">
+          <a href="/ai-receptionist">AI receptionist</a>
           <a href="#essentials">Product</a>
           <a href="/for-floors">Multi-stylist</a>
           <a href="/for-solo">Solo / booth</a>
@@ -643,6 +624,9 @@ function Home() {
           <a href="/compare/vagaro">vs Vagaro</a>
           <a href="/compare/gloss-genius">vs Gloss Genius</a>
           <a href="/compare/fresha">vs Fresha</a>
+          <a href="/compare/booksy">vs Booksy</a>
+          <a href="/compare/boulevard">vs Boulevard</a>
+          <a href="/compare/mangomint">vs Mangomint</a>
           <a href="#audit">Gap audit</a>
           <a
             href={FLOOR_PILOT_HREF}

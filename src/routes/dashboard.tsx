@@ -17,6 +17,12 @@ import { isOnboarded, loadPilotSession } from '../lib/pilot-session'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardLayout,
+  head: () => ({
+    meta: [
+      { title: 'Dashboard · GlowUP.' },
+      { name: 'robots', content: 'noindex, nofollow' },
+    ],
+  }),
 })
 
 function DashboardLayout() {

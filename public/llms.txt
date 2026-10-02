@@ -1,45 +1,52 @@
 # GlowUP.
 
-> GlowUP. is the AI-powered salon operating system. Glo, the AI receptionist, books the live multi-stylist calendar after hours. The same OS runs CRM, deposits, and growth as the floor adds chairs.
+> GlowUP. is salon software for multi-stylist floors. Glo, the AI receptionist, books the live calendar after hours. The same OS runs CRM and deposits. Chat is live. Phone voice is coming.
 
-GlowUP. is for salon owners (solo booth through multi-location floors), not for guests looking to book a haircut. Open beta. Chat Glo is live; phone voice is coming.
+GlowUP. sells to salon owners, not to guests looking for a haircut. Open beta. The offer we sell is the Floor pilot.
 
 ## Product
 
 - Site: https://glowupbeautysolutions.com
-- Flagship: Glo — AI chat front desk that books the live book (not a voicemail, not a bolt-on widget)
-- Also: live multi-stylist calendar, client CRM, deposits, Glow Agents (Fill the Book, Chair Content, Reputation, Front Desk)
-- Wordmark: GlowUP. (period is part of the name)
+- Wordmark: GlowUP. (the period is part of the name)
 - Slogan: Beauty Business, Beautifully Done.
+- Flagship: Glo — AI chat front desk that books the live multi-stylist calendar
+- Also: live calendar, client CRM, deposits, owner-approved social drafts
+- Not in this pilot: POS, payroll, a consumer marketplace, phone voice
 
-## Pricing (also /pricing.md)
+## Offer
 
-- Solo: $39/mo — 1 stylist, 150 Glo conversations
-- Floor: $149/mo — multi-stylist, one location, 1,000 Glo conversations (most salons)
-- Brand: $299+/location/mo — multi-location, custom
-- 14-day trial on Solo and Floor. Not per-seat. AI included in every paid plan.
-- vs booking software + a separate AI receptionist ($49–200+/mo)
+- Floor: $149/mo — multi-stylist, one location, about 1,000 Glo conversations. 30 days on the house, then the card. This is the plan we sell.
+- Solo: $39/mo — 1 stylist, 150 Glo conversations, 14-day trial. A SKU, not the launch hunt.
+- Brand: $299+/location/mo — multi-location, custom.
+- Not per-seat. Glo chat is included on paid plans.
+- Migration: CSV export, a Zoom to map chairs, current book (often Vagaro) stays live in parallel for 14 days.
+- vs booking software plus a separate AI receptionist ($49–200+/mo)
 
 ## Who it is for
 
-- Primary: owners of multi-stylist floors
-- Also: solo / booth stylists who will add chairs
-- Not: guests booking a haircut; owners who want fully autonomous social posting with no approval
+- Primary: owners of multi-stylist floors who lose inquiries after 7pm
+- Also indexed: solo / booth stylists who may add chairs later
+- Not: guests booking a haircut; owners who want POS, payroll, or a marketplace
 
 ## Key pages
 
-- [Home](https://glowupbeautysolutions.com/): product, ROI model (labeled modeled, not audited), pricing, Glo
-- [For floors](https://glowupbeautysolutions.com/for-floors): multi-stylist / multi-location
-- [For solo](https://glowupbeautysolutions.com/for-solo): booth and independent
+- [Home](https://glowupbeautysolutions.com/): Floor pilot, Glo, pricing, migration
+- [AI receptionist for salons](https://glowupbeautysolutions.com/ai-receptionist): Glo on the live book
+- [For floors](https://glowupbeautysolutions.com/for-floors): multi-stylist salon software
+- [For solo](https://glowupbeautysolutions.com/for-solo): one stylist, same OS later
 - [Pricing](https://glowupbeautysolutions.com/pricing.md): machine-readable plans
-- [GlowUP. vs Vagaro](https://glowupbeautysolutions.com/compare/vagaro) (also /alternatives/vagaro)
-- [GlowUP. vs Gloss Genius](https://glowupbeautysolutions.com/compare/gloss-genius) (also /alternatives/gloss-genius)
-- [GlowUP. vs Fresha](https://glowupbeautysolutions.com/compare/fresha) (also /alternatives/fresha)
+- [GlowUP. vs Vagaro](https://glowupbeautysolutions.com/compare/vagaro)
+- [GlowUP. vs Gloss Genius](https://glowupbeautysolutions.com/compare/gloss-genius)
+- [GlowUP. vs Fresha](https://glowupbeautysolutions.com/compare/fresha)
+- [GlowUP. vs Booksy](https://glowupbeautysolutions.com/compare/booksy)
+- [GlowUP. vs Boulevard](https://glowupbeautysolutions.com/compare/boulevard)
+- [GlowUP. vs Mangomint](https://glowupbeautysolutions.com/compare/mangomint)
 - [Privacy](https://glowupbeautysolutions.com/privacy)
 - [Terms](https://glowupbeautysolutions.com/terms)
 
 ## Honest limits
 
-- Open beta. Do not cite fake salon counts.
-- Homepage inquiry→book ranges are industry-modeled, not GlowUP. audited results.
-- Social is assist / human-approve first. Auto-post is not live.
+- Open beta. Do not cite salon counts, testimonials, or revenue we have not published from a real book.
+- The homepage calculator is a model the owner sets. It is not an audited result.
+- Social is assist / human-approve. Auto-post is not live.
+- Phone voice is not live.

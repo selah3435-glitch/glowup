@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { BrandLogo } from '../components/BrandLogo'
+import { marketingHead } from '../lib/marketing-meta'
 
 export const Route = createFileRoute('/terms')({
   component: TermsPage,
-  head: () => ({
-    meta: [{ title: 'Terms of Service — GlowUP.' }],
-  }),
+  head: () =>
+    marketingHead({
+      title: 'Terms of Service — GlowUP.',
+      description:
+        'Terms for the GlowUP. salon operating system, including the Floor pilot, Glo chat, and open beta limits.',
+      path: '/terms',
+    }),
 })
 
 function TermsPage() {

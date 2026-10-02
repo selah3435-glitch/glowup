@@ -109,6 +109,26 @@
   status = 301
 
 [[redirects]]
+  from = "/alternatives/booksy"
+  to = "/compare/booksy"
+  status = 301
+
+[[redirects]]
+  from = "/alternatives/boulevard"
+  to = "/compare/boulevard"
+  status = 301
+
+[[redirects]]
+  from = "/alternatives/mangomint"
+  to = "/compare/mangomint"
+  status = 301
+
+[[redirects]]
+  from = "/ai-receptionist-for-salons"
+  to = "/ai-receptionist"
+  status = 301
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
