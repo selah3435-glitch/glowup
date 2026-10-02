@@ -100,6 +100,16 @@
   outline-offset: 3px;
   opacity: 1;
 }
+.marketing-page.rhode-look .ai-rec-fab {
+  background: #c4787a !important;
+  color: #fff !important;
+  border-color: #c4787a !important;
+  box-shadow: 0 12px 28px rgba(196, 120, 122, 0.28) !important;
+}
+.marketing-page.rhode-look .ai-rec-fab-badge {
+  background: #fff !important;
+  color: #a85a5c !important;
+}
 .rd-nav-cta {
   display: inline-flex;
   align-items: center;
