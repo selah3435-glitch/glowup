@@ -1,8 +1,14 @@
 /** Stripe deposit path — Payment Link in settings (no server secret required for Phase 1) */
 
+import { cancelPolicyLine, resolveDepositAmount } from './deposit-rules'
 import { loadOpsSettings } from './ops-settings'
 import { setPaymentStatus, type Appointment } from './calendar-store'
 import { queueMessage } from './notifications-store'
+
+export function depositAmountFor(appt: Pick<Appointment, 'service'>): string {
+  const settings = loadOpsSettings()
+  return resolveDepositAmount(appt.service, settings)
+}
 
 export function getDepositUrl(appointment?: Appointment): string | null {
   const link = loadOpsSettings().stripePaymentLink?.trim()
@@ -26,12 +32,15 @@ export function requestDeposit(appt: Appointment): { ok: boolean; url?: string; 
       error: 'Add a Stripe Payment Link in Ops → Payments (Dashboard → create Payment Link for deposits).',
     }
   }
-  setPaymentStatus(appt.id, 'deposit_requested', settings.depositAmount)
+  const amount = resolveDepositAmount(appt.service, settings)
+  const policy = cancelPolicyLine(settings.cancelWindowHours)
+  setPaymentStatus(appt.id, 'deposit_requested', amount)
   const body = [
     `Hi ${appt.clientName},`,
     ``,
-    `Please secure your ${appt.service} on ${appt.dateLabel} at ${appt.time} with a ${settings.depositCurrency} ${settings.depositAmount} deposit:`,
+    `Please secure your ${appt.service} on ${appt.dateLabel} at ${appt.time} with a ${settings.depositCurrency} ${amount} deposit:`,
     url,
+    ...(policy ? ['', policy] : []),
     ``,
     `— ${settings.studioName || 'Studio'}`,
   ].join('\n')

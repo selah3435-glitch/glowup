@@ -368,13 +368,21 @@ function OpsPage() {
             </div>
           </div>
           <p className="ops-help">
-            Create a <strong>Payment Link</strong> in Stripe Dashboard for deposits. Paste it here. Calendar{' '}
-            <strong>Deposit</strong> sends the link; turn on <strong>Auto deposit on book</strong> under messaging to
-            mark deposit requested and include the link in the confirm SMS automatically.
+            Create a <strong>Payment Link</strong> in Stripe Dashboard for deposits. Paste it here. The calendar
+            charges the default amount, or the high-ticket amount when the service name matches. The cancel window is
+            written into the deposit text. This is not a card reader or a POS.
           </p>
           <SettingsForm
             settings={settings}
-            fields={['studioName', 'stripePaymentLink', 'depositAmount', 'depositCurrency']}
+            fields={[
+              'studioName',
+              'stripePaymentLink',
+              'depositAmount',
+              'depositCurrency',
+              'highTicketServices',
+              'highTicketDeposit',
+              'cancelWindowHours',
+            ]}
             onSave={saveField}
           />
         </section>
@@ -505,6 +513,34 @@ function SettingsForm({
         <label>
           Currency
           <input value={form.depositCurrency} onChange={(e) => setForm({ ...form, depositCurrency: e.target.value })} />
+        </label>
+      )}
+      {fields.includes('highTicketServices') && (
+        <label>
+          High-ticket services (comma-separated)
+          <input
+            value={form.highTicketServices}
+            onChange={(e) => setForm({ ...form, highTicketServices: e.target.value })}
+            placeholder="Balayage, Color"
+          />
+        </label>
+      )}
+      {fields.includes('highTicketDeposit') && (
+        <label>
+          High-ticket deposit
+          <input
+            value={form.highTicketDeposit}
+            onChange={(e) => setForm({ ...form, highTicketDeposit: e.target.value })}
+          />
+        </label>
+      )}
+      {fields.includes('cancelWindowHours') && (
+        <label>
+          Cancel window (hours)
+          <input
+            value={form.cancelWindowHours}
+            onChange={(e) => setForm({ ...form, cancelWindowHours: e.target.value })}
+          />
         </label>
       )}
       {fields.includes('ownerNotifyEmail') && (
