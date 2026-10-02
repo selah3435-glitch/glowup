@@ -1128,7 +1128,7 @@
   max-width: 28px;
   margin: 0 auto;
   border-radius: 3px 3px 0 0;
-  background: linear-gradient(180deg, #e8a8b4, #c4a574);
+  background: linear-gradient(180deg, #e8a8b4, #c47a8c);
   opacity: 0.55;
   min-height: 4px;
 }
@@ -1176,7 +1176,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #0c0a0b;
-  background: linear-gradient(90deg, #e8a8b4, #c4a574);
+  background: linear-gradient(90deg, #e8a8b4, #c47a8c);
   padding: 12px 14px;
   border-radius: 999px;
   text-align: center;

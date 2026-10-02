@@ -1929,6 +1929,12 @@ a.agent-card-link em {
   cursor: pointer;
   text-align: left;
 }
+.marketing-page .ai-rec-fab {
+  border-color: #c4787a;
+  background: #c4787a;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(196, 120, 122, 0.28);
+}
 .ai-rec-fab-pulse {
   animation: ai-fab-pulse 2s ease-in-out infinite;
 }
