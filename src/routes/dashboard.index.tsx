@@ -123,28 +123,16 @@ function DashboardOverview() {
         </div>
       )}
 
-      <div
-        className="schedule-card"
-        style={{ marginBottom: '1rem', padding: '16px 18px', border: '1px solid rgba(196,165,116,0.35)' }}
-      >
-        <strong style={{ display: 'block', marginBottom: 6 }}>Your Glo front desk</strong>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+      <div className="schedule-card glo-desk">
+        <strong>Your Glo front desk</strong>
+        <div className="glo-desk-row">
           <input
+            className="glo-desk-link"
             readOnly
             value={deskUrl}
             onFocus={(e) => e.currentTarget.select()}
             spellCheck={false}
-            style={{
-              flex: 1,
-              minWidth: 220,
-              height: 36,
-              padding: '0 10px',
-              border: '1px solid var(--line)',
-              borderRadius: 2,
-              background: 'var(--card)',
-              color: 'var(--ink)',
-              fontSize: 12,
-            }}
+            aria-label="Glo desk link"
           />
           <button
             type="button"
@@ -166,7 +154,7 @@ function DashboardOverview() {
             </a>
           ) : null}
         </div>
-        <ol style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.55, opacity: 0.9 }}>
+        <ol>
           <li>Share that link — a guest books with Glo 24/7</li>
           <li>
             <strong>Calendar</strong> shows it after refresh/pull
@@ -279,7 +267,7 @@ function DashboardOverview() {
         </div>
         {upcoming.length === 0 ? (
           <p className="booking-holds-empty">
-            No upcoming bookings — clients use <strong>AI Receptionist</strong> on the public site, or add from Calendar.
+            No upcoming bookings — clients book with <strong>Glo</strong> on the public site, or add from Calendar.
           </p>
         ) : (
           <ul className="booking-holds-list">

@@ -51,7 +51,6 @@ const essentials = [
     copy: 'Always-on receptionist that books the live multi-stylist calendar.',
     badge: 'Live',
     live: true,
-    img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80',
   },
   {
     cat: 'book',
@@ -59,7 +58,6 @@ const essentials = [
     copy: 'One book for every chair — no double-books, no sticky notes.',
     badge: 'Live',
     live: true,
-    img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
   },
   {
     cat: 'crm',
@@ -67,7 +65,6 @@ const essentials = [
     copy: 'Preferences, visit history, and formulas for the whole floor.',
     badge: 'Live',
     live: true,
-    img: 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=800&q=80',
   },
   {
     cat: 'money',
@@ -75,7 +72,6 @@ const essentials = [
     copy: 'Protect high-ticket services so cancels don’t empty the floor.',
     badge: 'Live',
     live: true,
-    img: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80',
   },
 ]
 
@@ -189,10 +185,8 @@ function Home() {
             <em>Glo books the live floor book.</em>
           </h1>
           <p className="rd-lede hero-answer">
-            GlowUP. is the salon operating system for owners who run floors. Glo, the native AI receptionist, books the
-            live multi-stylist calendar after hours. Chat is live; phone voice is coming. Five Floor pilots at $149 with
-            30 days on the house — native desk, live book, deposits. Product wordmark is GlowUP. The site is
-            glowupbeautysolutions.com.
+            GlowUP. is salon software for multi-stylist floors. Glo books the live calendar after hours. Floor pilot
+            $149 with 30 days on the house.
           </p>
           <div className="rd-cta-row">
             <a
@@ -391,21 +385,18 @@ function Home() {
             not include POS, payroll, or a marketplace. Phone voice is coming.
           </p>
         </div>
-        <div className="rd-card-grid">
+        <ul className="rd-product-notes">
           {essentials.map((c) => (
-            <article key={c.title} className="rd-card">
-              <div className="rd-card-media">
-                <img src={c.img} alt="" />
-              </div>
-              <div className="rd-card-body">
-                <span className="rd-card-cat">{c.cat}</span>
+            <li key={c.title}>
+              <span className="rd-kicker">{c.cat}</span>
+              <div>
                 <h3>{c.title}</h3>
                 <p>{c.copy}</p>
-                <span className={`rd-card-badge ${c.live ? 'live' : ''}`}>{c.badge}</span>
               </div>
-            </article>
+              <span className={`rd-card-badge ${c.live ? 'live' : ''}`}>{c.badge}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="rd-philosophy" id="product">
@@ -463,7 +454,7 @@ function Home() {
 
       <section className="rd-section" id="proof">
         <div className="rd-section-head">
-          <p className="rd-kicker">rhode + you energy · real numbers</p>
+          <p className="rd-kicker">Pilot metrics · this book</p>
           <h2>
             Proof from
             <br />
