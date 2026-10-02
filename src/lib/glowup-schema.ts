@@ -36,6 +36,18 @@ export const GLOWUP_FAQ: ReadonlyArray<{ q: string; a: string }> = [
     q: 'Does Glo book the live calendar?',
     a: 'Yes. Glo books onto the live multi-stylist calendar — real chairs, not a voicemail or a bolt-on widget. Chat Glo is in open beta; phone voice is coming soon.',
   },
+  {
+    q: 'How do I start a Floor pilot?',
+    a: `Floor is ${floor.priceLabel}/mo for a multi-stylist location, with ${FLOOR_PILOT_DAYS} days on the house, then the card. Glo chat is included. Migration is concierge: CSV export, a Zoom to map chairs, and your current book (often Vagaro) stays live in parallel for 14 days.`,
+  },
+  {
+    q: 'Can I keep Vagaro running while I switch?',
+    a: 'Yes. Switch cost is the real objection. We do not ask you to shut the current book off on day one. Export a CSV, map stylists with us on Zoom, and run Vagaro beside GlowUP. for 14 days. Cut over when the floor book is ready.',
+  },
+  {
+    q: 'Is GlowUP. a salon marketplace?',
+    a: 'No. GlowUP. is salon software for the owner: live multi-stylist calendar, CRM, deposits, and Glo. Guests book your chairs. We do not run a consumer marketplace that sends strangers for a commission.',
+  },
 ]
 
 const orgId = `${GLOWUP_SITE}/#organization`

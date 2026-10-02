@@ -18,12 +18,12 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'GlowUP. | The AI-Powered Salon Operating System (OS)',
+        title: 'AI Receptionist for Salons | GlowUP.',
       },
       {
         name: 'description',
         content:
-          'GlowUP. is the salon operating system. Glo, the native AI receptionist, books the live multi-stylist calendar after hours. CRM, deposits, and growth on one OS. Open beta.',
+          'GlowUP. is salon software for multi-stylist floors. Glo, the AI receptionist, books the live calendar after hours. Floor pilot $149, 30 days on the house. Open beta.',
       },
       {
         name: 'theme-color',

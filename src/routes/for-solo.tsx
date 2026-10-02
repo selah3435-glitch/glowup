@@ -2,19 +2,21 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check, ChevronRight } from 'lucide-react'
 import { BrandLogo } from '../components/BrandLogo'
 import { trackEvent } from '../lib/analytics'
+import { breadcrumbJsonLd, marketingHead } from '../lib/marketing-meta'
 
 export const Route = createFileRoute('/for-solo')({
   component: ForSoloPage,
-  head: () => ({
-    meta: [
-      { title: 'Salon Software for Independent Stylists & Booth Renters | GlowUP.' },
-      {
-        name: 'description',
-        content:
-          'Take control of your beauty business. Automate client booking, secure deposits, and manage your schedule with GlowUP. solo — then grow into Floor without re-platforming.',
-      },
-    ],
-  }),
+  head: () =>
+    marketingHead({
+      title: 'Salon Software for Independent Stylists | GlowUP.',
+      description:
+        'GlowUP. Solo is $39/mo for one stylist: live calendar, deposits, and Glo chat. The same OS becomes Floor when you add chairs. Open beta. Multi-stylist floors are the launch.',
+      path: '/for-solo',
+      jsonLd: breadcrumbJsonLd([
+        { name: 'GlowUP.', path: '/' },
+        { name: 'Solo', path: '/for-solo' },
+      ]),
+    }),
 })
 
 const TRIAL = '/login?next=%2Fonboarding&plan=solo'

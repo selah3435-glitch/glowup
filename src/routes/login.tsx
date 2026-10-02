@@ -13,7 +13,15 @@ import {
 import { BrandLogo } from '../components/BrandLogo'
 import { trackEvent } from '../lib/analytics'
 
-export const Route = createFileRoute('/login')({ component: LoginPage })
+export const Route = createFileRoute('/login')({
+  component: LoginPage,
+  head: () => ({
+    meta: [
+      { title: 'Sign in · GlowUP.' },
+      { name: 'robots', content: 'noindex, follow' },
+    ],
+  }),
+})
 
 function persistPlanFromUrl() {
   if (typeof window === 'undefined') return

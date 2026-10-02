@@ -1,6 +1,6 @@
 # Pricing — GlowUP.
 
-Last updated: 2026-08-27
+Last updated: 2026-10-02
 Source of truth: https://glowupbeautysolutions.com/#pricing
 Site: https://glowupbeautysolutions.com
 
@@ -25,7 +25,7 @@ GlowUP. is a salon operating system. Glo AI is included in every paid plan. Pack
 - Price: $149/month (billed monthly)
 - Target: multi-stylist, one location (most salons)
 - Included AI: 1,000 Glo conversations / month
-- Trial: 14 days
+- Pilot: 30 days on the house, then the card. This is the plan we sell.
 - Features:
   - Multi-stylist live calendar spine
   - Full CRM (formulas, preferences, history)

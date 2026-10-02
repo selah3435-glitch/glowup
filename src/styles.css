@@ -2620,18 +2620,18 @@ a.agent-card-link em {
 }
 @media (max-width: 720px) {
   .cookie-banner {
-    top: 0;
+    top: auto;
     left: 0;
     right: 0;
-    bottom: auto;
+    bottom: 0;
     max-width: none;
     width: 100%;
     padding: 10px 14px;
     border-radius: 0;
     border-left: none;
     border-right: none;
-    border-top: none;
-    box-shadow: 0 8px 20px rgba(26, 26, 26, 0.12);
+    border-bottom: none;
+    box-shadow: 0 -8px 20px rgba(26, 26, 26, 0.12);
     display: flex;
     flex-wrap: wrap;
     align-items: center;

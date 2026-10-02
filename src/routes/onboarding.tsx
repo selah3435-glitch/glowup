@@ -10,7 +10,15 @@ import { planFromTeamSize, PRICING_PLANS, type PlanId } from '../lib/pricing'
 import { isOnboarded, loadPilotSession, markOnboarded, savePilotSession } from '../lib/pilot-session'
 import { BrandLogo } from '../components/BrandLogo'
 
-export const Route = createFileRoute('/onboarding')({ component: Onboarding })
+export const Route = createFileRoute('/onboarding')({
+  component: Onboarding,
+  head: () => ({
+    meta: [
+      { title: 'Set up your floor · GlowUP.' },
+      { name: 'robots', content: 'noindex, follow' },
+    ],
+  }),
+})
 
 const services = ['Haircuts & styling', 'Color services', 'Nails', 'Skin & facials', 'Lashes & brows', 'Massage & body']
 

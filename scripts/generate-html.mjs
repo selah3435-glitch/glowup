@@ -23,7 +23,7 @@ const PAGES = [
       'native AI receptionist',
       'FAQPage',
       'application/ld+json',
-      'Industry-modeled ranges, not GlowUP. audited results',
+      'Floor is $149/mo for a multi-stylist location, with 30 days on the house, then the card.',
     ],
     mustNotInclude: [],
   },

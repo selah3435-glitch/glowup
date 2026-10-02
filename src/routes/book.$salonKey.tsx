@@ -13,6 +13,7 @@ export const Route = createFileRoute('/book/$salonKey')({
         name: 'description',
         content: 'After-hours Glo chat for this studio. Phone voice is not live yet.',
       },
+      { name: 'robots', content: 'noindex, nofollow' },
     ],
   }),
 })

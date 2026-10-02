@@ -1,6 +1,10 @@
 # GlowUP. — allow search and citation crawlers. Block training-only dumps.
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /login
+Disallow: /onboarding
+Disallow: /book/
 
 User-agent: GPTBot
 Allow: /

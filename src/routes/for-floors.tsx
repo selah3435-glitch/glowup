@@ -2,22 +2,22 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check, ChevronRight } from 'lucide-react'
 import { BrandLogo } from '../components/BrandLogo'
 import { trackEvent } from '../lib/analytics'
+import { breadcrumbJsonLd, FLOOR_PILOT_HREF, marketingHead } from '../lib/marketing-meta'
 
 export const Route = createFileRoute('/for-floors')({
   component: ForFloorsPage,
-  head: () => ({
-    meta: [
-      { title: 'Multi-Location Salon Management Software & CRM | GlowUP.' },
-      {
-        name: 'description',
-        content:
-          'Manage multiple floors, staff schedules, and branches from one unified calendar spine. Glo AI after-hours chat, CRM, deposits — scale your salon enterprise with GlowUP.',
-      },
-    ],
-  }),
+  head: () =>
+    marketingHead({
+      title: 'Salon Software for Multi-Stylist Floors | GlowUP.',
+      description:
+        'Salon booking software and CRM for multi-stylist floors. One live calendar, Glo after hours, deposits. Floor pilot $149 with 30 days on the house.',
+      path: '/for-floors',
+      jsonLd: breadcrumbJsonLd([
+        { name: 'GlowUP.', path: '/' },
+        { name: 'Floors', path: '/for-floors' },
+      ]),
+    }),
 })
-
-const TRIAL = '/login?next=%2Fonboarding&plan=floor'
 
 const points = [
   'One live multi-stylist calendar spine — no double-books across chairs',
@@ -41,7 +41,7 @@ function ForFloorsPage() {
           <a href="/compare/vagaro">Compare</a>
           <a
             className="rd-nav-cta"
-            href={TRIAL}
+            href={FLOOR_PILOT_HREF}
             onClick={() => trackEvent('join_beta_click', { plan: 'floor', location: 'for_floors_nav' })}
           >
             Start Floor pilot
@@ -63,7 +63,7 @@ function ForFloorsPage() {
         <div className="rd-cta-row">
           <a
             className="rd-btn-primary"
-            href={TRIAL}
+            href={FLOOR_PILOT_HREF}
             onClick={() => trackEvent('join_beta_click', { plan: 'floor', location: 'for_floors_hero' })}
           >
             Start Floor pilot <ChevronRight size={16} />
@@ -83,8 +83,8 @@ function ForFloorsPage() {
           ))}
         </ul>
         <p className="segment-note">
-          Solo or booth first? Start on{' '}
-          <Link to="/for-solo">GlowUP. for independent stylists</Link> — same OS when you scale.
+          Switching books is concierge: CSV, a Zoom, and 14 days beside the current book.{' '}
+          <Link to="/ai-receptionist">Glo is the AI receptionist</Link> on that same calendar.
         </p>
       </section>
 
@@ -92,6 +92,7 @@ function ForFloorsPage() {
         <BrandLogo href="/" showSlogan />
         <nav className="rd-footer-nav">
           <Link to="/">Home</Link>
+          <Link to="/ai-receptionist">AI receptionist</Link>
           <Link to="/for-solo">Solo</Link>
           <a href="/#migrate">Migrate</a>
           <a href="/compare/vagaro">vs Vagaro</a>

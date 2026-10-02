@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { BrandLogo } from '../components/BrandLogo'
+import { marketingHead } from '../lib/marketing-meta'
 
 export const Route = createFileRoute('/privacy')({
   component: PrivacyPage,
-  head: () => ({
-    meta: [{ title: 'Privacy Policy — GlowUP.' }],
-  }),
+  head: () =>
+    marketingHead({
+      title: 'Privacy Policy — GlowUP.',
+      description:
+        'How GlowUP. collects account, salon, and Glo chat data, and the choices you have. GlowUP Beauty Solutions.',
+      path: '/privacy',
+    }),
 })
 
 function PrivacyPage() {
