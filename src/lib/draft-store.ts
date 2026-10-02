@@ -2,10 +2,13 @@
 
 import type { GlowAgentId, PostStatus } from './glow-agents'
 
+export const ASSIST_PLATFORMS = ['facebook', 'instagram', 'tiktok'] as const
+export type AssistPlatform = (typeof ASSIST_PLATFORMS)[number]
+
 export type StudioDraft = {
   id: string
   createdAt: string
-  status: Extract<PostStatus, 'draft' | 'pending_approval' | 'approved' | 'ready'>
+  status: Extract<PostStatus, 'draft' | 'pending_approval' | 'approved' | 'scheduled' | 'ready' | 'marked_posted'>
   service: string
   caption: string
   variants: string[]
@@ -16,6 +19,10 @@ export type StudioDraft = {
   authorRole: 'owner' | 'stylist'
   consentFace: boolean
   consentBack: boolean
+  /** YYYY-MM-DD the owner chose for the week wall */
+  publishOn?: string
+  postedPlatforms?: AssistPlatform[]
+  postedAt?: string
 }
 
 const KEY = 'glowup_studio_drafts_v1'
@@ -50,7 +57,42 @@ export function listPendingDrafts(): StudioDraft[] {
 }
 
 export function listReadyDrafts(): StudioDraft[] {
-  return listDrafts().filter((d) => d.status === 'approved' || d.status === 'ready')
+  return listDrafts().filter((d) => d.status === 'approved' || d.status === 'ready' || d.status === 'scheduled')
+}
+
+export function scheduleDraft(id: string, publishOn: string): StudioDraft | null {
+  const day = publishOn.trim()
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null
+  const all = readAll()
+  const idx = all.findIndex((d) => d.id === id)
+  if (idx < 0) return null
+  const current = all[idx]
+  if (current.status === 'pending_approval' || current.status === 'draft') return null
+  all[idx] = {
+    ...current,
+    publishOn: day,
+    status: current.status === 'marked_posted' ? 'marked_posted' : 'scheduled',
+  }
+  writeAll(all)
+  return all[idx]
+}
+
+export function markDraftPosted(id: string, platform: AssistPlatform): StudioDraft | null {
+  const all = readAll()
+  const idx = all.findIndex((d) => d.id === id)
+  if (idx < 0) return null
+  const current = all[idx]
+  if (current.status === 'pending_approval' || current.status === 'draft') return null
+  const posted = new Set(current.postedPlatforms || [])
+  posted.add(platform)
+  all[idx] = {
+    ...current,
+    status: 'marked_posted',
+    postedPlatforms: ASSIST_PLATFORMS.filter((name) => posted.has(name)),
+    postedAt: new Date().toISOString(),
+  }
+  writeAll(all)
+  return all[idx]
 }
 
 export function saveDraft(
@@ -72,6 +114,9 @@ export function saveDraft(
     authorRole: input.authorRole,
     consentFace: input.consentFace,
     consentBack: input.consentBack,
+    publishOn: existing?.publishOn,
+    postedPlatforms: existing?.postedPlatforms,
+    postedAt: existing?.postedAt,
   }
   const rest = readAll().filter((d) => d.id !== draft.id)
   rest.push(draft)

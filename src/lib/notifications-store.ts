@@ -83,9 +83,10 @@ export function buildBookingConfirm(input: {
   appointmentId: string
   depositLink?: string
   depositAmount?: string
+  cancelPolicy?: string
 }) {
   const depositLine = input.depositLink
-    ? `Secure your chair${input.depositAmount ? ` (${input.depositAmount})` : ''} with a deposit: ${input.depositLink}`
+    ? `Secure your chair${input.depositAmount ? ` (${input.depositAmount})` : ''} with a deposit: ${input.depositLink}${input.cancelPolicy ? ` ${input.cancelPolicy}` : ''}`
     : `Reply if you need to reschedule.`
   const body = [
     `Hi ${input.clientName},`,

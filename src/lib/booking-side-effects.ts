@@ -11,6 +11,7 @@ import {
   dispatchMessage,
   type OutboundMessage,
 } from './notifications-store'
+import { cancelPolicyLine, resolveDepositAmount } from './deposit-rules'
 import { getDepositUrl } from './payments'
 import { loadOpsSettings } from './ops-settings'
 
@@ -35,11 +36,13 @@ export async function runBookingSideEffects(appt: Appointment): Promise<BookingS
     return result
   }
 
+  const depositAmount = resolveDepositAmount(appt.service, settings)
+  const policy = cancelPolicyLine(settings.cancelWindowHours)
   let depositUrl: string | undefined
   if (settings.autoDepositOnBook && settings.stripePaymentLink?.trim()) {
     depositUrl = getDepositUrl(appt) || undefined
     if (depositUrl) {
-      setPaymentStatus(appt.id, 'deposit_requested', settings.depositAmount)
+      setPaymentStatus(appt.id, 'deposit_requested', depositAmount)
       result.depositRequested = true
       result.depositUrl = depositUrl
     }
@@ -61,10 +64,8 @@ export async function runBookingSideEffects(appt: Appointment): Promise<BookingS
       studioName: settings.studioName || 'Studio',
       appointmentId: appt.id,
       depositLink: depositUrl,
-      depositAmount:
-        depositUrl && settings.depositAmount
-          ? `${settings.depositCurrency || 'USD'} ${settings.depositAmount}`
-          : undefined,
+      depositAmount: depositUrl ? `${settings.depositCurrency || 'USD'} ${depositAmount}` : undefined,
+      cancelPolicy: depositUrl ? policy : undefined,
     })
     result.confirms = confirms.length
     toSend.push(...confirms)

@@ -9,6 +9,11 @@ export type OpsSettings = {
   stripePaymentLink: string
   depositAmount: string
   depositCurrency: string
+  /** Comma-separated service names that use the higher deposit */
+  highTicketServices: string
+  highTicketDeposit: string
+  /** Hours before the visit when a cancel still keeps the deposit */
+  cancelWindowHours: string
   ownerNotifyEmail: string
   ownerNotifyPhone: string
   studioName: string
@@ -36,6 +41,9 @@ const DEFAULTS: OpsSettings = {
   stripePaymentLink: '',
   depositAmount: '50',
   depositCurrency: 'USD',
+  highTicketServices: 'Balayage, Color',
+  highTicketDeposit: '100',
+  cancelWindowHours: '24',
   ownerNotifyEmail: '',
   ownerNotifyPhone: '',
   studioName: 'Studio',

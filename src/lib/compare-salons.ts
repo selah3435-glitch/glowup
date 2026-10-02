@@ -49,9 +49,10 @@ const GLOWUP = {
   aiFrontDesk:
     'Glo chat is included on paid plans and books the live calendar (open beta). Phone voice is coming soon.',
   crm: 'Client CRM with notes and visit history; Floor and Brand add formulas and floor-wide history.',
-  deposits: 'Deposits path on paid plans to protect high-ticket services.',
+  deposits:
+    'Stripe Payment Link on the appointment. Default deposit, a higher amount for named high-ticket services, and a cancel window in the request. Not a card reader or POS.',
   socialApproval:
-    'Human-in-the-loop: Glow Concierge drafts; owners approve before anything is ready to post. Auto-post is not live.',
+    'Owner approves the draft, then assist-publish to Facebook, Instagram, and TikTok. The week wall records what was marked posted. Auto-post is not live.',
   pricingModel: `${glowupPlans}. Glo included. Not per-seat. Floor: ${FLOOR_PILOT_DAYS} days on the house, then ${floor.priceLabel}/mo. Solo: ${TRIAL_DAYS}-day trial. Open beta.`,
 }
 

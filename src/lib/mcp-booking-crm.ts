@@ -313,12 +313,18 @@ export function resource_salon_services(): McpToolResult<{ services: string[] }>
 export function resource_salon_policies(): McpToolResult<{
   studioName: string
   depositAmount: string
+  highTicketServices: string
+  highTicketDeposit: string
+  cancelWindowHours: string
   messagingEnabled: boolean
 }> {
   const s = loadOpsSettings()
   return ok('resource:salon/policies', {
     studioName: s.studioName,
     depositAmount: s.depositAmount,
+    highTicketServices: s.highTicketServices,
+    highTicketDeposit: s.highTicketDeposit,
+    cancelWindowHours: s.cancelWindowHours,
     messagingEnabled: s.messagingEnabled,
   })
 }

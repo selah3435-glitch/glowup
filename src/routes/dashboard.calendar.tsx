@@ -25,7 +25,8 @@ import {
 } from '../lib/calendar-store'
 import { DEMO_STYLISTS, loadSalonContext } from '../lib/demo-salon'
 import { pullFromCloud } from '../lib/cloud-sync'
-import { markPaid, markWaived, requestDeposit } from '../lib/payments'
+import { depositAmountFor, markPaid, markWaived, requestDeposit } from '../lib/payments'
+import { loadOpsSettings } from '../lib/ops-settings'
 
 export const Route = createFileRoute('/dashboard/calendar')({
   component: CalendarPage,
@@ -216,7 +217,8 @@ function CalendarPage() {
                 </div>
                 <div className="cal-appt-actions">
                   <small>
-                    Ref {shortHoldCode(a.id)} · pay {a.paymentStatus || 'unpaid'}
+                    Ref {shortHoldCode(a.id)} · pay {a.paymentStatus || 'unpaid'} · deposit{' '}
+                    {loadOpsSettings().depositCurrency} {a.depositAmount || depositAmountFor(a)}
                   </small>
                   {a.status === 'confirmed' && (
                     <>
